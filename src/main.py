@@ -17,40 +17,26 @@ p.setTimeStep(time_step)
 p.loadURDF("plane.urdf")
 
 # Load the robot arm
-arm_start_pos = [0, 0, 0.1]
+arm_start_pos = [0, 0, 0]
 arm_start_orientation = p.getQuaternionFromEuler([0, 0, 0])
-arm_id = p.loadURDF("urdf/simple2d_arm.urdf", arm_start_pos, arm_start_orientation, useFixedBase=True)
+arm_id = p.loadURDF("/src/urdf/4dof.urdf", arm_start_pos, arm_start_orientation, useFixedBase=True)
 
-# Add user debug sliders
-pitch_slider = p.addUserDebugParameter("Camera Pitch", -90, 90, -10)
-joint1_slider = p.addUserDebugParameter("Joint 1 Angle (deg)", -180, 180, 90)
-joint2_slider = p.addUserDebugParameter("Joint 2 Angle (deg)", -180, 180, 90)
+# Add user sliders
+r_axis_slider = p.addUserDebugParameter("R-Axis Angle (deg)", 0, 180, 0)
 
 # Joint indices
-LINK1_JOINT_IDX = 0
-LINK2_JOINT_IDX = 1
+R_AXIS_JOINT_IDX = 0
+A_AXIS_JOINT_IDX = 1
+B_AXIS_JOINT_IDX = 2
+C_AXIS_JOINT_IDX = 3
 
 # Infinite simulation loop
 while True:
-    # Read slider values
-    pitch = p.readUserDebugParameter(pitch_slider)
-    joint1_deg = p.readUserDebugParameter(joint1_slider)
-    joint2_deg = p.readUserDebugParameter(joint2_slider)
+    r_axis_deg = p.readUserDebugParameter(r_axis_slider)
 
-    # Update camera pitch
-    p.resetDebugVisualizerCamera(
-        cameraDistance=1.5,
-        cameraYaw=180,
-        cameraPitch=pitch,
-        cameraTargetPosition=[0, 0, 1.0]
-    )
+    r_axis_rad = math.radians(r_axis_deg)
 
-    # Convert to radians and apply position control
-    joint1_rad = math.radians(joint1_deg)
-    joint2_rad = math.radians(joint2_deg)
-
-    p.setJointMotorControl2(arm_id, LINK1_JOINT_IDX, p.POSITION_CONTROL, targetPosition=joint1_rad)
-    p.setJointMotorControl2(arm_id, LINK2_JOINT_IDX, p.POSITION_CONTROL, targetPosition=joint2_rad)
+    p.setJointMotorControl2(arm_id, R_AXIS_JOINT_IDX, p.POSITION_CONTROL, targetPosition=r_axis_rad)
 
     p.stepSimulation()
     time.sleep(time_step)
