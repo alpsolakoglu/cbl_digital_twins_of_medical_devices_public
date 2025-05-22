@@ -22,10 +22,10 @@ arm_start_orientation = p.getQuaternionFromEuler([0, 0, 0])
 arm_id = p.loadURDF("/src/urdf/4dof.urdf", arm_start_pos, arm_start_orientation, useFixedBase=True)
 
 # Add user sliders
-r_axis_slider = p.addUserDebugParameter("R-Axis Angle (deg)", 0, 180, 0)
-a_axis_slider = p.addUserDebugParameter("A-Axis Angle (deg)", -90, 90, 0)
-b_axis_slider = p.addUserDebugParameter("B-Axis Angle (deg)", 0, 160, 0)
-c_axis_slider = p.addUserDebugParameter("C-Axis Angle (deg)", 0, 160, 0)
+r_axis_slider = p.addUserDebugParameter(" R-Axis Angle (deg)", 0, 180, 0)
+a_axis_slider = p.addUserDebugParameter(" A-Axis Angle (deg)", -90, 90, 0)
+b_axis_slider = p.addUserDebugParameter(" B-Axis Angle (deg)", 0, 160, 0)
+c_axis_slider = p.addUserDebugParameter(" C-Axis Angle (deg)", 0, 160, 0)
 
 # Joint indices
 # Fixed joint index (not used in control)
