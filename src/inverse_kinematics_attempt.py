@@ -20,7 +20,7 @@ p.setTimeStep(time_step)
 p.loadURDF("plane.urdf")
 arm_id = p.loadURDF("/src/urdf/4dof.urdf")
 p.resetBasePositionAndOrientation(arm_id, [0, 0, 0], [0, 0, 0, 1])
-arm_end_effector_index = 3
+arm_end_effector_index = 4
 
 # Exclude the fixed joint
 num_non_fixed_joints = p.getNumJoints(arm_id) - 1  
