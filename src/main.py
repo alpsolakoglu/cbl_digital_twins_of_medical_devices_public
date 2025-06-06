@@ -9,13 +9,13 @@ def main():
     simulation_queue = mp.Queue()  # For sending data to simulation
     controller_queue = mp.Queue()  # For sending data to controller
 
-    simulation_queue.put({"axis_angle_degrees": 15, "axis_name": "A"})  # Example input for simulation
-    simulation_queue.put({"axis_angle_degrees": 45, "axis_name": "A"})  # Example input for simulation
-    simulation_queue.put({"axis_angle_degrees": 30, "axis_name": "B"})  # Example input for simulation
-    simulation_queue.put({"axis_angle_degrees": 180, "axis_name": "R"})  # Example input for simulation
-    simulation_queue.put({"axis_angle_degrees": -45, "axis_name": "A"})  # Example input for simulation
-    simulation_queue.put({"axis_angle_degrees": -45, "axis_name": "A"})  # Example input for simulation
-    simulation_queue.put({"axis_angle_degrees": 360, "axis_name": "R"})  # Example input for simulation
+    simulation_queue.put({"type": "set_axis_angle", "axis_angle_degrees": 90, "axis_name": "B"})  # Example input for simulation
+    simulation_queue.put({"type": "set_axis_angle", "axis_angle_degrees": 0, "axis_name": "B"})  # Example input for simulation
+    simulation_queue.put({"type": "set_axis_angle", "axis_angle_degrees": 90, "axis_name": "B"})  # Example input for simulation
+    simulation_queue.put({"type": "set_axis_angle", "axis_angle_degrees": 0, "axis_name": "B"})  # Example input for simulation
+
+    simulation_queue.put({"type": "stop"})  # Example input for simulation
+    controller_queue.put({"type": "stop"})  # Example input for simulation
 
     controller_process = mp.Process(target=controller.start, args=(controller_queue, simulation_queue, "COM", 115200, 1))
     simulation_process = mp.Process(target=sim.start, args=(controller_queue, simulation_queue))

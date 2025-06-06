@@ -14,6 +14,9 @@ def start(controller_queue, inverse_kinematics_queue, port, baudrate, timeout):
             if not controller_queue.empty():
                 message = controller_queue.get()
                 print(f"Controller: Received Queue Message: {message}")
+                if message["type"] == "stop":
+                    print("Controller: Stopping process.")
+                    break
                 # Process the message as needed
 
     except serial.SerialException as e:
