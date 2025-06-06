@@ -13,7 +13,7 @@ def start(controller_queue, inverse_kinematics_queue, port, baudrate, timeout):
             #     print(f"Received: {data}")
             if not controller_queue.empty():
                 message = controller_queue.get()
-                print(f"Controller Queue Message: {message}")
+                print(f"Controller: Received Queue Message: {message}")
                 # Process the message as needed
 
     except serial.SerialException as e:

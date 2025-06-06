@@ -82,9 +82,9 @@ def start(controller_queue, simulation_queue):
         }
         
         if desired_angle_reached:
-            print(f"Successfully reached target angle: {axis_angle_degrees} degrees for axis {axis_name}")
+            print(f"Simulation: Successfully reached target angle: {axis_angle_degrees} degrees for axis {axis_name}")
         else:
-            print(f"Failed to reach target angle: {axis_angle_degrees} degrees for axis {axis_name}")
+            print(f"Simulation: Failed to reach target angle: {axis_angle_degrees} degrees for axis {axis_name}")
 
         # Send the message back to the controller
         controller_queue.put(message)
