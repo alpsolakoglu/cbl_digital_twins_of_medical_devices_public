@@ -3,7 +3,7 @@ import pybullet_data
 import time
 import math
 
-def start(controller_queue, inverse_kinematics_queue):
+def start(controller_queue, simulation_queue):
     # Start PyBullet with GUI
     physics_client = p.connect(p.GUI)
 
@@ -32,51 +32,64 @@ def start(controller_queue, inverse_kinematics_queue):
     C_AXIS_JOINT_IDX = 4
 
     # Infinite simulation loop
-
-    # Placeholder for message received check
-    message_received = True  
     while True:
-        # Check is message received
-        # If message is received, check format of the message and return error if invalid, otherewise update the joint angle
-        # After updating the joint angle, step the simulation until the desired angle is reached (with some epsilon)
-        # If the angle is reached, and no constraints are violate during any step, send message back to the controller with success, and failure otherwise
-        if message_received:
-            angle_deg= 180
-            joint = R_AXIS_JOINT_IDX
+        if simulation_queue.empty():
+            continue  # Skip if no message is received
+        message = simulation_queue.get()
+            
+        axis_angle_degrees = message["axis_angle_degrees"]
+        axis_name = message["axis_name"]
 
-            angle_rad = math.radians(angle_deg)
-            p.setJointMotorControl2(arm_id, joint, p.POSITION_CONTROL, targetPosition=angle_rad)
+        axis_id = None
+        match axis_name:
+            case "R":
+                axis_id = R_AXIS_JOINT_IDX
+            case "A":
+                axis_id = A_AXIS_JOINT_IDX
+            case "B":
+                axis_id = B_AXIS_JOINT_IDX
+            case "C":
+                axis_id = C_AXIS_JOINT_IDX
+            case _:
+                print(f"Invalid axis letter: {message['axis_letter']}")
+                continue
 
 
-            desired_angle_reached = False
-            start_time = time.time()
-            timeout_duration_seconds = 5
-            while time.time() - start_time < timeout_duration_seconds:
-                p.stepSimulation()
-                time.sleep(time_step)
+        axis_angle_rad = math.radians(axis_angle_degrees)
+        p.setJointMotorControl2(arm_id, axis_id, p.POSITION_CONTROL, targetPosition=axis_angle_rad)
 
-                # Check if the joint angle is within a small epsilon of the target angle
-                joint_state = p.getJointState(arm_id, joint)
-                current_angle_rad = joint_state[0]
-                current_angle_deg = math.degrees(current_angle_rad)
+        desired_angle_reached = False
+        start_time = time.time()
+        timeout_duration_seconds = 5
+        while time.time() - start_time < timeout_duration_seconds:
+            p.stepSimulation()
+            time.sleep(time_step)
 
-                if abs(current_angle_deg - angle_deg) < 0.1:
-                    desired_angle_reached = True
-                    break
+            # Check if the joint angle is within a small epsilon of the target angle
+            joint_state = p.getJointState(arm_id, axis_id)
+            current_angle_rad = joint_state[0]
+            current_angle_deg = math.degrees(current_angle_rad)
 
-            if desired_angle_reached:
-                print(f"Successfully reached target angle: {angle_deg} degrees for joint {joint}")
-                # Send success message back to controller (placeholder)
-                # send_message_to_controller("success")
-            else:
-                print(f"Failed to reach target angle: {angle_deg} degrees for joint {joint}")
-                # Send failure message back to controller (placeholder)
-                # send_message_to_controller("failure")
+            if abs(current_angle_deg - axis_angle_degrees) < 0.1:
+                desired_angle_reached = True
+                break
+        
+        
+        message = {
+                "axis_angle_degrees": axis_angle_degrees,
+                "axis_name": axis_name,
+                "status": "success" if desired_angle_reached else "failure"
+        }
+        
+        if desired_angle_reached:
+            print(f"Successfully reached target angle: {axis_angle_degrees} degrees for axis {axis_name}")
+        else:
+            print(f"Failed to reach target angle: {axis_angle_degrees} degrees for axis {axis_name}")
 
-            message_received = False  # Reset after processing
+        # Send the message back to the controller
+        controller_queue.put(message)
+
+        message_received = False  # Reset after processing
 
         p.stepSimulation()
         time.sleep(time_step)
-
-if __name__ == "__main__":
-    start_physics_client()
