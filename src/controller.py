@@ -19,8 +19,8 @@ def start(controller_queue, inverse_kinematics_queue, port, baudrate, timeout):
                     break
                 # Process the message as needed
 
-    except serial.SerialException as e:
-        print(f"Error: {e}")
+    #except serial.SerialException as e:
+    #    print(f"Error: {e}")
     except KeyboardInterrupt:
         print("Exiting...")
     # finally:

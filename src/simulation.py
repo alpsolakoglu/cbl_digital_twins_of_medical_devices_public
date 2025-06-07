@@ -38,6 +38,7 @@ def start(controller_queue, simulation_queue):
         message = simulation_queue.get()
         print(f"Simulation: Received Queue Message: {message}")
         if message["type"] == "stop":
+            controller_queue.put({"type": "stop"})
             print("Simulation: Stopping simulation.")
             break
         elif message["type"] == "set_axis_angle":
@@ -79,6 +80,7 @@ def start(controller_queue, simulation_queue):
             
             
             message = {
+                    "type": "confirmation",
                     "axis_angle_degrees": axis_angle_degrees,
                     "axis_name": axis_name,
                     "status": "success" if desired_angle_reached else "failure"
