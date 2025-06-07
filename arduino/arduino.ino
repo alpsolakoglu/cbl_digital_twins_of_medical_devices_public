@@ -18,7 +18,7 @@ const int R_axis_pin = 2;
 const uint8_t channels[4] = {2, 3, 4, 5};
 AS5600 sensors[4];
 
-void setoffset
+void se
 
 void tcaSelect(uint8_t channel) {
   if (channel > 7) return;
