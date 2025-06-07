@@ -16,7 +16,7 @@ private:
     ::Servo m_servo; // ESP32Servo instance
 public:
     // Constructor to initialize the servo on a specific pin
-    Servo(uint8_t pin, uint8_t channel, bool positiveClockwise, double ServoAngleOffsetFromVirtualZero, double RotaryEncoderAngleOffsetFromServoAngle);
+    Servo(uint8_t pin, uint8_t channel, bool positiveClockwise, double servoAngleOffsetFromVirtualZero, double rotaryEncoderAngleOffsetFromServoAngle);
 
     // Initialize the servo
     bool attach() override;

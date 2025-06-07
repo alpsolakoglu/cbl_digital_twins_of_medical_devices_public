@@ -3,7 +3,7 @@
 
 
 // Constructor to initialize the servo on a specific pin
-Servo::Servo(uint8_t pin, uint8_t channel)
+Servo::Servo(uint8_t pin, uint8_t channel, bool positiveClockwise, double servoAngleOffsetFromVirtualZero, double rotaryEncoderAngleOffsetFromServoAngle)
     : m_pin(pin), m_channel(channel), m_angleDegrees(0.0) {
 
     
@@ -16,7 +16,7 @@ bool Servo::attach() {
 
 // Move the servo to a specified position
 bool Servo::setAngle(double angleDegrees) {
-
+    m_servo.read();
     m_servo.write(angleDegrees);
 }
 

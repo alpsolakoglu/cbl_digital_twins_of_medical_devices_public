@@ -23,6 +23,14 @@ public:
     void setInRadians(double radians);
 
     void setInDegrees(double degrees);
+
+    static double degreesToRadians(double degrees);
+
+    static double radiansToDegrees(double radians);
+
+    static double normalizeRadians(double radians);
+
+    static double normalizeDegrees(double degrees);
 };
 
 #endif // ANGLE_DEGREES_H
