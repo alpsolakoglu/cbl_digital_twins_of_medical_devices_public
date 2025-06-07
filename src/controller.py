@@ -1,4 +1,5 @@
 import serial
+import json
 
 def start(controller_queue, inverse_kinematics_queue, port, baudrate, timeout):
     try:
@@ -14,7 +15,15 @@ def start(controller_queue, inverse_kinematics_queue, port, baudrate, timeout):
             if not controller_queue.empty():
                 message = controller_queue.get()
                 print(f"Controller: Received Queue Message: {message}")
-                if message["type"] == "stop":
+
+                if message["type"] == "set_axis_angle":
+                    axis_angle_degrees = message["axis_angle_degrees"]
+                    axis_name = message["axis_name"]
+                    print(f"Controller: Setting {axis_name} axis to {axis_angle_degrees} degrees.")
+                    # Here you would send the command to the robot arm via serial
+                    # ser.write(f"{axis_name}:{axis_angle_degrees}\n".encode('utf-8'))
+
+                elif message["type"] == "stop":
                     print("Controller: Stopping process.")
                     break
                 # Process the message as needed

@@ -14,11 +14,11 @@ const int B_axis_pin = 5;
 const int C_axis_pin = 4;
 const int R_axis_pin = 2;
 
+const char sensorLabels[4] = {'R', 'A', 'B', 'C'};
+
 // Channel assignments
 const uint8_t channels[4] = {2, 3, 4, 5};
 AS5600 sensors[4];
-
-void se
 
 void tcaSelect(uint8_t channel) {
   if (channel > 7) return;
@@ -61,10 +61,10 @@ void loop() {
   }
 
   A_axis.write(95);
-  B_axis.write(180);
+  B_axis.write(175);
   C_axis.write(90);
 
 
   Serial.println("-------------------------");
-  delay(50);
+  delay(50);
 }
