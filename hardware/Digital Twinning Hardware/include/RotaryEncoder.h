@@ -14,17 +14,23 @@ namespace DT
     private:
         uint8_t m_channel;
         std::string m_axisName;
-
+        bool m_defaultPositiveClockwise;
+        
         AS5600 m_sensor;
         Angle m_lastReadAngle;
         bool m_started;
 
     public:
         // Constructor to initialize the rotary encoder on a specific pin and channel
-        RotaryEncoder(uint8_t channel, std::string axisName);
+        RotaryEncoder(uint8_t channel, std::string axisName, bool defaultPositiveClockwise);
 
         // Initialize the rotary encoder
         bool start();
+
+        // Configure the rotary encoder
+        bool configure();
+
+        bool selectUsedChannel();
 
         // Read sthe angle from the rotary encoder
         Angle readAngle();

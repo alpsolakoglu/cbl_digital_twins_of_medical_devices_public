@@ -1,11 +1,12 @@
 
 #include <RotaryEncoder.h>
 #include <TCAMultiplexer.h>
+#include <AS5600.h>
 
 namespace DT
 {
-    RotaryEncoder::RotaryEncoder(uint8_t channel, std::string axisName)
-        : m_channel(channel), m_axisName(axisName), m_lastReadAngle(Angle::fromRadians(0)) {}
+    RotaryEncoder::RotaryEncoder(uint8_t channel, std::string axisName, bool defaultPositiveClockwise)
+        : m_channel(channel), m_axisName(axisName), m_defaultPositiveClockwise(defaultPositiveClockwise), m_lastReadAngle(Angle::fromRadians(0)) {}
 
     bool RotaryEncoder::start()
     {
@@ -15,17 +16,9 @@ namespace DT
             return true; // Already started, no need to reinitialize
         }
 
-        // Ensure the multiplexer is started
-        if (!TCAMultiplexer::getInstance().start())
-        {
-            Serial.println("Failed to start TCA Multiplexer");
-            return false; // Failed to start the multiplexer
-        }
-
         // Select the TCA channel for this encoder
-        if (!TCAMultiplexer::getInstance().selectChannel(m_channel))
+        if (!RotaryEncoder::selectUsedChannel())
         {
-            Serial.println("Failed to select TCA channel " + String(m_channel) + ", for AS5600 on axis " + String(m_axisName.c_str()));
             return false;
         }
 
@@ -39,6 +32,41 @@ namespace DT
         m_started = true; // Mark the encoder as started
         Serial.println("AS5600 initialized on channel " + String(m_channel));
         return true;
+    }
+
+    bool RotaryEncoder::configure()
+    {
+        Serial.println("Configuring AS5600 on channel " + String(m_channel));
+        Serial.println("Axis Name: " + String(m_axisName.c_str()));
+        Serial.println("Current Angle: " + String(m_sensor.readAngle()));
+
+        if (!selectUsedChannel()) {
+            Serial.println("Failed to select TCA channel " + String(m_channel) + " for AS5600 on axis " + String(m_axisName.c_str()));
+            return false; // Failed to select the channel
+        } // Ensure the correct channel is selected
+
+        m_sensor.setZPosition(m_sensor.readAngle());               // Set the zero position to 0 degrees
+        m_sensor.setDirection(m_defaultPositiveClockwise ? 0 : 1); // Set the direction towards the esp32 on the wooden plate to be positive
+        
+        return true; // Successfully configured the encoder
+    }
+
+    bool RotaryEncoder::selectUsedChannel()
+    {
+        // Ensure the multiplexer is started
+        if (!TCAMultiplexer::getInstance().start())
+        {
+            Serial.println("Failed to start TCA Multiplexer");
+            return false; // Failed to start the multiplexer
+        }
+
+        // Select the TCA channel for this encoder
+        if (!TCAMultiplexer::getInstance().selectChannel(m_channel))
+        {
+            Serial.println("Failed to select TCA channel " + String(m_channel) + ", for AS5600 on axis " + String(m_axisName.c_str()));
+            return false;
+        }
+        return true; // Successfully selected the channel
     }
 
     Angle RotaryEncoder::readAngle()

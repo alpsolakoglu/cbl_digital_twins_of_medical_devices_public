@@ -12,7 +12,7 @@ namespace DT
 {
     class Servo : public IAxis
     {
-    private:
+    protected:
         uint8_t m_pin; // Pin number for the servo
         std::string m_axisName; // Name of the servo axis for identification
         Angle m_initialAngle; // Initial angle to set the servo to

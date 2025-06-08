@@ -18,7 +18,6 @@ namespace DT
         }
 
         m_servo.attach(m_pin, m_minPulseWidth, m_maxPulseWidth); // Attach the servo to the specified pin with pulse width limits
-        m_servo.write((int) m_initialAngle.getInDegrees());   // Set initial angle
 
         if (m_servo.attached() == false)
         {
@@ -33,8 +32,8 @@ namespace DT
     // Move the servo to a specified position
     bool Servo::setAngle(Angle angle)
     {
-        m_servo.writeMicroseconds(Angle::map(angle, Angle::fromDegrees(0), Angle::fromDegrees(180), m_minPulseWidth, m_maxPulseWidth));
-        Serial.println("AAAAA" + String(Angle::map(angle, Angle::fromDegrees(0), Angle::fromDegrees(180), m_minPulseWidth, m_maxPulseWidth)));
+        int pulseWidth = Angle::map(angle, Angle::fromDegrees(0), Angle::fromDegrees(180), m_minPulseWidth, m_maxPulseWidth);
+        m_servo.writeMicroseconds(pulseWidth);
         return true;
     }
 
