@@ -42,26 +42,18 @@ void loop() {
   Serial.println("Axis R: " + String(angleR.getInDegrees()) + " degrees");
   Serial.println("-----");
 
-  if (counter % 8 == 0) {
+  if (counter % 4 == 0) {
     if (flip) {
-      axisA_servo.setAngle(DT::Angle::fromDegrees(90.0));
-      // axisA_servo.setAngle(DT::Angle::fromDegrees(90));
-      // axisB_servo.setAngle(DT::Angle::fromDegrees(175));
-      // axisC_servo.setAngle(DT::Angle::fromDegrees(95));
+      axisA_servo.setAngle(DT::Angle::fromDegrees(90));
+      axisB_servo.setAngle(DT::Angle::fromDegrees(175));
+      axisC_servo.setAngle(DT::Angle::fromDegrees(95));
     } else {
-      axisA_servo.setAngle(DT::Angle::fromDegrees(45.0));
-      // axisA_servo.setAngle(DT::Angle::fromRadians(DT::Angle::kPI / 4.0));
-      // axisB_servo.setAngle(DT::Angle::fromDegrees(85));
-      // axisC_servo.setAngle(DT::Angle::fromDegrees(130));
+      axisA_servo.setAngle(DT::Angle::fromDegrees(45));
+      axisB_servo.setAngle(DT::Angle::fromDegrees(85));
+      axisC_servo.setAngle(DT::Angle::fromDegrees(130));
     }
     flip = !flip;
     counter = 0;
-  } else if (counter % 4 == 0) {
-    if (flip) {
-      axisA_servo.setAngle(DT::Angle::fromDegrees(90.0));
-    } else {
-      axisA_servo.setAngle(DT::Angle::fromDegrees(45.0));
-    }
   }
   counter++;
   

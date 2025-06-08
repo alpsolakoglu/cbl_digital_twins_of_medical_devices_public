@@ -24,7 +24,7 @@ namespace DT
         bool m_started = false; // Flag to check if the servo is initialized
     public:
         // Constructor to initialize the servo on a specific pin
-        Servo(uint8_t pin, std::string axisName, Angle initialAngle, uint16_t minPulseWidth, uint16_t maxPulseWidth);
+        Servo(uint8_t pin, std::string axisName, Angle initialAngle = Angle::fromDegrees(90), uint16_t minPulseWidth = 544, uint16_t maxPulseWidth = 2400);
 
         // Initialize the servo
         bool start() override;

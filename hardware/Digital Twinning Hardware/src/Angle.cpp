@@ -74,7 +74,7 @@ namespace DT
         double inMinRad = inMin.getInRadians();
         double inMaxRad = inMax.getInRadians();
 
-        double domainSize = inMinRad - inMaxRad;
+        double domainSize = inMaxRad - inMinRad;
         uint16_t rangeSize = outMax - outMin;
         uint16_t midpoint = outMin + rangeSize / 2;
 

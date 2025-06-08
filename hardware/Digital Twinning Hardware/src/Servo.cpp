@@ -4,7 +4,7 @@
 namespace DT
 {
     // Constructor to initialize the servo on a specific pin
-    Servo::Servo(uint8_t pin, std::string axisName, Angle initialAngle = Angle::fromDegrees(90), uint16_t minPulseWidth = 544, uint16_t maxPulseWidth = 2400)
+    Servo::Servo(uint8_t pin, std::string axisName, Angle initialAngle, uint16_t minPulseWidth, uint16_t maxPulseWidth)
         : m_pin(pin), m_axisName(axisName), m_lastSetAngle(initialAngle), m_initialAngle(initialAngle),
           m_minPulseWidth(minPulseWidth), m_maxPulseWidth(maxPulseWidth) {}
 
@@ -33,7 +33,8 @@ namespace DT
     // Move the servo to a specified position
     bool Servo::setAngle(Angle angle)
     {
-        m_servo.writeMicroseconds((int)(m_minPulseWidth + angle.getInDegrees() / 180.0 * (m_maxPulseWidth - m_minPulseWidth))); // Convert angle to nearest degree for servo
+        m_servo.writeMicroseconds(Angle::map(angle, Angle::fromDegrees(0), Angle::fromDegrees(180), m_minPulseWidth, m_maxPulseWidth));
+        Serial.println("AAAAA" + String(Angle::map(angle, Angle::fromDegrees(0), Angle::fromDegrees(180), m_minPulseWidth, m_maxPulseWidth)));
         return true;
     }
 
