@@ -1,53 +1,55 @@
 #include <Angle.h>
 
-// Private constructor
-Angle::Angle(double radians) {
-    setInRadians(radians);
-}
-
-// Named constructors
-Angle Angle::fromRadians(double radians) { return Angle(radians); }
-
-Angle Angle::fromDegrees(double degrees) { return Angle(degreesToRadians(degrees)); }
-
-// Accessors
-double Angle::getInRadians() const { return m_radians; }
-
-double Angle::getInDegrees() const { 
-    return radiansToDegrees(m_radians);
-}
-
-void Angle::setInRadians(double radians) {
-    m_radians = normalizeRadians(radians);
-}
-
-void Angle::setInDegrees(double degrees) {
-    setInRadians(degreesToRadians(normalizeDegrees(degrees)));
-}
-
-double Angle::degreesToRadians(double degrees) {
-        return degrees * PI / 180.0;
+namespace DT {
+    // Private constructor
+    Angle::Angle(double radians) {
+        setInRadians(radians);
     }
 
-double Angle::radiansToDegrees(double radians) {
-    return radians * 180.0 / PI;
-}
+    // Named constructors
+    Angle Angle::fromRadians(double radians) { return Angle(radians); }
 
-double Angle::normalizeRadians(double radians) {
-    while (radians < 0) {
-        radians += 2 * PI;
+    Angle Angle::fromDegrees(double degrees) { return Angle(degreesToRadians(degrees)); }
+
+    // Accessors
+    double Angle::getInRadians() const { return m_radians; }
+
+    double Angle::getInDegrees() const { 
+        return radiansToDegrees(m_radians);
     }
-    while (radians >= 2 * PI) {
-        radians -= 2 * PI;
+
+    void Angle::setInRadians(double radians) {
+        m_radians = normalizeRadians(radians);
     }
-    return radians;
-}
-double Angle::normalizeDegrees(double degrees) {
-    while (degrees < 0) {
-        degrees += 360.0;
+
+    void Angle::setInDegrees(double degrees) {
+        setInRadians(degreesToRadians(normalizeDegrees(degrees)));
     }
-    while (degrees >= 360.0) {
-        degrees -= 360.0;
+
+    double Angle::degreesToRadians(double degrees) {
+            return degrees * kPI / 180.0;
+        }
+
+    double Angle::radiansToDegrees(double radians) {
+        return radians * 180.0 / kPI;
     }
-    return degrees;
+
+    double Angle::normalizeRadians(double radians) {
+        while (radians < 0) {
+            radians += 2 * kPI;
+        }
+        while (radians >= 2 * kPI) {
+            radians -= 2 * kPI;
+        }
+        return radians;
+    }
+    double Angle::normalizeDegrees(double degrees) {
+        while (degrees < 0) {
+            degrees += 360.0;
+        }
+        while (degrees >= 360.0) {
+            degrees -= 360.0;
+        }
+        return degrees;
+    }
 }
