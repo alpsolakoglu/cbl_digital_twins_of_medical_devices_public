@@ -7,18 +7,21 @@
 #include <stdint.h>
 #include <string>
 
-namespace DT {
-    class RotaryEncoder {
+namespace DT
+{
+    class RotaryEncoder
+    {
     private:
-        uint8_t m_pin;
         uint8_t m_channel;
         std::string m_axisName;
 
         AS5600 m_sensor;
         Angle m_lastReadAngle;
+        bool m_started;
+
     public:
         // Constructor to initialize the rotary encoder on a specific pin and channel
-        RotaryEncoder(uint8_t pin, uint8_t channel, std::string axisName);
+        RotaryEncoder(uint8_t channel, std::string axisName);
 
         // Initialize the rotary encoder
         bool start();
@@ -33,6 +36,5 @@ namespace DT {
         std::string getAxisName() const;
     };
 }
-
 
 #endif

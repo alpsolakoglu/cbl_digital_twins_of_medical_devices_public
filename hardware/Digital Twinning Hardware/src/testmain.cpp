@@ -1,18 +1,32 @@
 #include <RotaryEncoder.h>
 #include <TCAMultiplexer.h>
+#include <Servo.h>
 
-DT::RotaryEncoder axisA_rot = DT::RotaryEncoder(16, 2, "A");
-DT::RotaryEncoder axisB_rot = DT::RotaryEncoder(5, 3, "B");
-DT::RotaryEncoder axisC_rot = DT::RotaryEncoder(4, 4, "C");
-DT::RotaryEncoder axisR_rot = DT::RotaryEncoder(2, 5, "R");
+
+DT::RotaryEncoder axisA_rot = DT::RotaryEncoder(5, "A");
+DT::RotaryEncoder axisB_rot = DT::RotaryEncoder(4, "B");
+DT::RotaryEncoder axisC_rot = DT::RotaryEncoder(3, "C");
+DT::RotaryEncoder axisR_rot = DT::RotaryEncoder(2, "R");
+
+DT::Servo axisA_servo = DT::Servo(4, "A", DT::Angle::fromDegrees(90));
+DT::Servo axisB_servo = DT::Servo(5, "B", DT::Angle::fromDegrees(175));
+DT::Servo axisC_servo = DT::Servo(16, "C", DT::Angle::fromDegrees(95));
+
+bool flip = true;
+int counter = 0;
 
 void setup() {
   Serial.begin(115200);
-  DT::TCAMultiplexer::getInstance().start();
+  delay(2000);
+
   axisA_rot.start();
   axisB_rot.start();
   axisC_rot.start();
   axisR_rot.start();
+
+  axisA_servo.start();
+  axisB_servo.start();
+  axisC_servo.start();
 }
 
 void loop() {
@@ -27,5 +41,29 @@ void loop() {
   Serial.println("Axis C: " + String(angleC.getInDegrees()) + " degrees");
   Serial.println("Axis R: " + String(angleR.getInDegrees()) + " degrees");
   Serial.println("-----");
-  delay(50);
+
+  if (counter % 8 == 0) {
+    if (flip) {
+      axisA_servo.setAngle(DT::Angle::fromDegrees(90.0));
+      // axisA_servo.setAngle(DT::Angle::fromDegrees(90));
+      // axisB_servo.setAngle(DT::Angle::fromDegrees(175));
+      // axisC_servo.setAngle(DT::Angle::fromDegrees(95));
+    } else {
+      axisA_servo.setAngle(DT::Angle::fromDegrees(45.0));
+      // axisA_servo.setAngle(DT::Angle::fromRadians(DT::Angle::kPI / 4.0));
+      // axisB_servo.setAngle(DT::Angle::fromDegrees(85));
+      // axisC_servo.setAngle(DT::Angle::fromDegrees(130));
+    }
+    flip = !flip;
+    counter = 0;
+  } else if (counter % 4 == 0) {
+    if (flip) {
+      axisA_servo.setAngle(DT::Angle::fromDegrees(90.0));
+    } else {
+      axisA_servo.setAngle(DT::Angle::fromDegrees(45.0));
+    }
+  }
+  counter++;
+  
+  delay(500);
 }
