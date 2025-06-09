@@ -23,7 +23,7 @@ namespace DT
         return true;
     }
     
-    bool ServoRotary::setAngleWithRotary(Angle angle, uint8_t timeoutSeconds)
+    bool ServoRotary::setAngleWithRotary(Angle desiredAngle, uint8_t timeoutSeconds)
     {
         if (!m_started)
         {
@@ -31,11 +31,11 @@ namespace DT
             return false;
         }
 
-        Angle angleWithServoOffset = angle; // Start with the input angle
+        Angle angleWithServoOffset = desiredAngle; // Start with the input angle
         if (m_positiveClockwise) {
-           angleWithServoOffset = Angle::fromDegrees(m_initialAngle.getInDegrees() - angle.getInDegrees());
+           angleWithServoOffset = Angle::fromDegrees(m_initialAngle.getInDegrees() - desiredAngle.getInDegrees());
         } else {
-           angleWithServoOffset = Angle::fromDegrees(m_initialAngle.getInDegrees() + angle.getInDegrees());
+           angleWithServoOffset = Angle::fromDegrees(m_initialAngle.getInDegrees() + desiredAngle.getInDegrees());
         }
          
         // Set the servo angle
@@ -51,14 +51,14 @@ namespace DT
         {
             Angle currentAngle = m_rotaryEncoder.readAngle();
             m_virtualAngle = currentAngle; // Update the virtual angle
-            if (std::abs(currentAngle.getInDegrees() - angle.getInDegrees()) < 5.0)
+            if (Angle::isWithinDelta(currentAngle, desiredAngle, Angle::fromDegrees(5.0)))
             {
                 return true; // Successfully set the angle and verified with rotary encoder
             }
             delay(100); // Polling delay
         }
 
-        Serial.println("Timeout waiting for rotary encoder to match angle: " + String(angle.getInDegrees()) + " degrees");
+        Serial.println("Timeout waiting for rotary encoder to match angle: " + String(desiredAngle.getInDegrees()) + " degrees");
         return false; // Timeout reached without matching angle
     }
 

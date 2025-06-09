@@ -1,6 +1,6 @@
 #include <Angle.h>
 
-#include<stdexcept>
+#include <stdexcept>
 
 namespace DT
 {
@@ -105,5 +105,19 @@ namespace DT
 
         uint16_t mappedValue = outMin + ((inRad - inMinRad) / domainSize) * rangeSize;
         return mappedValue;
+    }
+
+    bool Angle::isWithinDelta(Angle angle1, Angle angle2, Angle delta)
+    {
+        double deltaDegrees = Angle::fromDegrees(angle2.getInDegrees() - angle1.getInDegrees()).getInDegrees();
+        double deltaDegreesShortestArc;
+
+        if (deltaDegrees < 360.0 - deltaDegrees) {
+            deltaDegreesShortestArc = deltaDegrees;
+        } else {
+            deltaDegreesShortestArc = 360.0 - deltaDegrees;
+        }
+
+        return deltaDegreesShortestArc <= delta.getInDegrees();
     }
 }

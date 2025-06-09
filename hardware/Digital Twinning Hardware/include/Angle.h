@@ -37,6 +37,8 @@ namespace DT
         static double normalizeDegrees(double degrees);
 
         static uint16_t map(Angle in, Angle inMin, Angle inMax, uint16_t outMin, uint16_t outMax);
+
+        static bool isWithinDelta(Angle angle1, Angle angle2, Angle delta);
     };
 }
 
