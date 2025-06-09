@@ -40,14 +40,15 @@ namespace DT
         Serial.println("Axis Name: " + String(m_axisName.c_str()));
         Serial.println("Current Angle: " + String(m_sensor.readAngle()));
 
-        if (!selectUsedChannel()) {
+        if (!selectUsedChannel())
+        {
             Serial.println("Failed to select TCA channel " + String(m_channel) + " for AS5600 on axis " + String(m_axisName.c_str()));
             return false; // Failed to select the channel
         } // Ensure the correct channel is selected
 
         m_sensor.setZPosition(m_sensor.readAngle());               // Set the zero position to 0 degrees
-        m_sensor.setDirection(m_defaultPositiveClockwise ? 0 : 1); // Set the direction towards the esp32 on the wooden plate to be positive
-        
+        m_sensor.setDirection(m_defaultPositiveClockwise ? 1 : 0); // Set the direction towards the esp32 on the wooden plate to be positive
+        delay(1000); // Allow time for the sensor to stabilize
         return true; // Successfully configured the encoder
     }
 
@@ -87,9 +88,19 @@ namespace DT
         return m_sensor.isConnected();
     }
 
+    uint8_t RotaryEncoder::getChannel() const
+    {
+        return m_channel;
+    }
+
     std::string RotaryEncoder::getAxisName() const
     {
         // Return the axis name for identification
         return m_axisName;
+    }
+
+    bool RotaryEncoder::getDefaultPositiveClockwise() const
+    {
+        return m_defaultPositiveClockwise;
     }
 }

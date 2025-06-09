@@ -18,7 +18,7 @@ namespace DT
         
         AS5600 m_sensor;
         Angle m_lastReadAngle;
-        bool m_started;
+        bool m_started = false;
 
     public:
         // Constructor to initialize the rotary encoder on a specific pin and channel
@@ -38,8 +38,15 @@ namespace DT
         // Check if the sensor is connected
         bool isConnected();
 
+        // Get the last read angle
+        uint8_t getChannel() const;
+
         // Get the axis name for identification
         std::string getAxisName() const;
+
+        // Get default positive clockwise direction
+        bool getDefaultPositiveClockwise() const;
+
     };
 }
 

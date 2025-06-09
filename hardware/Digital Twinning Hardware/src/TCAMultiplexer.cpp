@@ -7,7 +7,7 @@
 namespace DT
 {
     // Private constructor for singleton
-    TCAMultiplexer::TCAMultiplexer() : m_currentChannel(255), m_started(false) {}
+    TCAMultiplexer::TCAMultiplexer() {}
 
     // Get singleton instance
     TCAMultiplexer &TCAMultiplexer::getInstance()

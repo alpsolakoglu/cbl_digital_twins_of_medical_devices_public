@@ -32,6 +32,12 @@ namespace DT
     // Move the servo to a specified position
     bool Servo::setAngle(Angle angle)
     {
+        if (angle.getInDegrees() < 0 || angle.getInDegrees() > 180)
+        {
+            Serial.println("Angle out of range: " + String(angle.getInDegrees()) + " degrees. Servo angle must be between 0 and 180 degrees.");
+            return false; // Angle is out of range
+        }
+
         int pulseWidth = Angle::map(angle, Angle::fromDegrees(0), Angle::fromDegrees(180), m_minPulseWidth, m_maxPulseWidth);
         m_servo.writeMicroseconds(pulseWidth);
         return true;

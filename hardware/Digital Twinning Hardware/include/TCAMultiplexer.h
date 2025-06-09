@@ -9,15 +9,15 @@ namespace DT
     {
     private:
         static constexpr uint8_t m_TCA_ADDR = 0x70;
-        uint8_t m_currentChannel;
-        bool m_started;
+        uint8_t m_currentChannel = 255;
+        bool m_started = false;
 
         // Private constructor for singleton
         TCAMultiplexer();
 
     public:
         // Get singleton instance
-        static TCAMultiplexer &getInstance();
+        static TCAMultiplexer& getInstance();
 
         // Initialize the multiplexer
         bool start();
