@@ -4,7 +4,6 @@
 #include <stdint.h>
 #include <mutex>
 #include <Optional.h>
-#include <optional>
 
 namespace DT
 {
