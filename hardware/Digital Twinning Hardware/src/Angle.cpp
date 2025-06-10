@@ -35,23 +35,23 @@ namespace DT
 
     double Angle::degreesToRadians(double degrees)
     {
-        return degrees * kPI / 180.0;
+        return degrees * c_pi / 180.0;
     }
 
     double Angle::radiansToDegrees(double radians)
     {
-        return radians * 180.0 / kPI;
+        return radians * 180.0 / c_pi;
     }
 
     double Angle::normalizeRadians(double radians)
     {
         while (radians < 0)
         {
-            radians += 2 * kPI;
+            radians += 2 * c_pi;
         }
-        while (radians >= 2 * kPI)
+        while (radians >= 2 * c_pi)
         {
-            radians -= 2 * kPI;
+            radians -= 2 * c_pi;
         }
         return radians;
     }

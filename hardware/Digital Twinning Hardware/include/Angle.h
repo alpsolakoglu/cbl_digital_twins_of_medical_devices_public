@@ -13,7 +13,7 @@ namespace DT
         explicit Angle(double radians);
 
     public:
-        static constexpr double kPI = 3.14159265358979323846;
+        static constexpr double c_pi = 3.14159265358979323846;
 
         // Named constructors
         static Angle fromRadians(double radians);
