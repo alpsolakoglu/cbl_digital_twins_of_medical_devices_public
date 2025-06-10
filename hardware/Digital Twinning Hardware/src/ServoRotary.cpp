@@ -53,6 +53,8 @@ namespace DT
             m_virtualAngle = currentAngle; // Update the virtual angle
             if (Angle::isWithinDelta(currentAngle, desiredAngle, Angle::fromDegrees(5.0)))
             {
+                Serial.println("Rotary encoder " + String(m_axisName.c_str()) + " matched desired angle (within epsilon)");
+                Serial.println("Desired: " + String(desiredAngle.getInDegrees()) + " degrees | Actual: " + String(currentAngle.getInDegrees()) + " degrees");
                 return true; // Successfully set the angle and verified with rotary encoder
             }
             delay(100); // Polling delay

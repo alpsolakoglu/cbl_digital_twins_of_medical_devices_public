@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <mutex>
+#include <Optional.h>
 
 namespace DT
 {
@@ -32,7 +33,19 @@ namespace DT
 
         // Ensure channel cannot be changed while in use
         template <typename F>
-        auto withChannel(uint8_t channel, F &&fn) -> decltype(fn());
+        auto withChannel(uint8_t channel, F &&fn) -> DT::Optional<decltype(fn())>
+        {
+            std::lock_guard<std::mutex> guard(m_lock);
+            if (!start())
+            {
+                return {};
+            }
+            if (!selectChannel(channel))
+            {
+                return {};
+            }
+            return fn();
+        };
 
         // Disable all channels
         void disableAll();

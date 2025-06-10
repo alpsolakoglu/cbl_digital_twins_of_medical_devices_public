@@ -16,7 +16,7 @@ namespace DT
             return true; // Already started, no need to reinitialize
         }
 
-        TCAMultiplexer::getInstance().withChannel(m_channel, [&]()
+        auto result = TCAMultiplexer::getInstance().withChannel(m_channel, [&]()
         {
             // Initialize the AS5600 sensor
             if (!m_sensor.begin())
@@ -29,6 +29,12 @@ namespace DT
             Serial.println("AS5600 initialized on channel " + String(m_channel));
             return true;
         });
+
+        if (result.has_value() && result.value() == true) {
+            return true; // Successfully started the encoder
+        } else {
+            return false;
+        }
     }
 
     bool RotaryEncoder::configure()
@@ -37,18 +43,25 @@ namespace DT
         Serial.println("Axis Name: " + String(m_axisName.c_str()));
         Serial.println("Current Angle: " + String(m_sensor.readAngle()));
 
-        TCAMultiplexer::getInstance().withChannel(m_channel, [&]()
+        auto result = TCAMultiplexer::getInstance().withChannel(m_channel, [&]()
         {
             m_sensor.setZPosition(m_sensor.readAngle());               // Set the zero position to 0 degrees
             m_sensor.setDirection(m_defaultPositiveClockwise ? 1 : 0); // Set the direction towards the esp32 on the wooden plate to be positive
             delay(1000);                                               // Allow time for the sensor to stabilize
             return true;                                               // Successfully configured the encoder
         });
+
+        if (result.has_value() && result.value() == true) {
+            Serial.println("AS5600 for axis " + String(m_axisName.c_str()) + " configured on channel " + String(m_channel));
+            return true; // Successfully started the encoder
+        } else {
+            return false;
+        }
     }
 
     Angle RotaryEncoder::readAngle()
     {
-        TCAMultiplexer::getInstance().withChannel(m_channel, [&]()
+        auto result = TCAMultiplexer::getInstance().withChannel(m_channel, [&]()
         {
             // Read the angle from the AS5600 sensors
             int rawAngle = m_sensor.readAngle();                         // Raw 12-bit angle
@@ -57,6 +70,13 @@ namespace DT
             m_lastReadAngle = angle; // Store the last read angle
             return angle; 
         });
+
+
+        if (result.has_value()) {
+            return result.value();
+        } else {
+            throw std::runtime_error("Failed to read angle from AS5600 on channel " + std::to_string(m_channel));
+        }
     }
 
     bool RotaryEncoder::isConnected()
