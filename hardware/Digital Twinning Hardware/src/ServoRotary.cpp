@@ -14,7 +14,7 @@ namespace DT
     bool ServoRotary::start() {
         Servo::start(); // Start the servo first
         Servo::setAngle(m_initialAngle); // Set the initial angle of the servo
-        delay(1500); // Allow time for the servo to reach the initial position
+        delay(1000); // Allow time for the servo to reach the initial position
         if (!m_rotaryEncoder.start()) {
             Serial.println("Failed to start rotary encoder on channel " + String(m_rotaryEncoder.getChannel()));
             return false; // Failed to start the rotary encoder

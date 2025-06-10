@@ -70,6 +70,18 @@ namespace DT
     {
         return m_currentChannel;
     }
+    
+    // Select channel with a function call
+    template <typename F>
+    auto TCAMultiplexer::withChannel(uint8_t channel, F&& fn) -> decltype(fn())
+    {
+        std::lock_guard<std::mutex> guard(m_lock);
+        if (!start())
+            return decltype(fn())(false);
+        if (!selectChannel(channel))
+            return decltype(fn())(false);
+        return fn();
+    }
 
     // Disable all channels
     void TCAMultiplexer::disableAll()

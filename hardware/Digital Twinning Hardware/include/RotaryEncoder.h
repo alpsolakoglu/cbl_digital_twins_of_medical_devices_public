@@ -30,8 +30,6 @@ namespace DT
         // Configure the rotary encoder
         bool configure();
 
-        bool selectUsedChannel();
-
         // Read sthe angle from the rotary encoder
         Angle readAngle();
 

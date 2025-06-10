@@ -12,7 +12,7 @@ namespace DT
         std::string m_axisName; // Name of the motor axis for identification
         bool m_started = false; // Flag to check if the motor is initialized
     public:
-
+        
     };
 }
 

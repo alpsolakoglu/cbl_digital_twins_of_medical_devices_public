@@ -112,9 +112,12 @@ namespace DT
         double deltaDegrees = Angle::fromDegrees(angle2.getInDegrees() - angle1.getInDegrees()).getInDegrees();
         double deltaDegreesShortestArc;
 
-        if (deltaDegrees < 360.0 - deltaDegrees) {
+        if (deltaDegrees < 360.0 - deltaDegrees)
+        {
             deltaDegreesShortestArc = deltaDegrees;
-        } else {
+        }
+        else
+        {
             deltaDegreesShortestArc = 360.0 - deltaDegrees;
         }
 

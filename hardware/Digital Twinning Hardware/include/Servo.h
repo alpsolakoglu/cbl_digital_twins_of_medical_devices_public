@@ -30,10 +30,10 @@ namespace DT
         bool start() override;
 
         // Move the servo to a specified position
-        bool setAngle(Angle angle) override;
+        bool setAngle(Angle angle);
     
         // Get the position last written to the servo
-        Angle getAngle() override;
+        Angle getAngle();
 
         // Get the name of the servo (for identification)
         std::string getAxisName() const override;
