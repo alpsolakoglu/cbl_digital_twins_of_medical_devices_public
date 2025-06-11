@@ -2,39 +2,38 @@
 #define SERVOCONTROLLER_H
 
 #include <IAxis.h>
-#include <TCAMultiplexer.h>
+#include <Angle.h>
 
-#include <RotaryEncoder.h>
 #include <ESP32Servo.h>
 #include <stdint.h>
 #include <string>
 
-namespace DT {
-    class Servo : public IAxis {
-    private:
+namespace DT
+{
+    class Servo : public IAxis
+    {
+    protected:
         uint8_t m_pin; // Pin number for the servo
-        double m_virtualZeroInServoAngle; // Virtual zero with respect to the servo
-        bool m_positiveClockwise; // Direction of rotation: true for positive clockwise, false for negative clockwise
-        double m_servoAngleOffsetFromVirtualZero; // Offset of the servo angle from the virtual zero position
-        double m_rotaryEncoderAngleOffsetFromServoAngle; // Offset of the rotary encoder angle from the servo angle
+        std::string m_axisName; // Name of the servo axis for identification
+        Angle m_initialAngle; // Initial angle to set the servo to
+        uint16_t m_minPulseWidth; // Minimum pulse width for the servo
+        uint16_t m_maxPulseWidth; // Maximum pulse width for the servo
 
-        ::Servo m_servo; // ESP32Servo instance for controlling the servo
-        double m_virtualAngleDegrees; // Virtual angle in degrees, which is the angle of the servo with respect to the virtual zero position
+        ::Servo m_servo;        // ESP32Servo instance for controlling the servo
+        Angle m_lastSetAngle;   // Last angle set to the servo
+        bool m_started = false; // Flag to check if the servo is initialized
     public:
         // Constructor to initialize the servo on a specific pin
-        Servo(uint8_t pin, double virtualZeroInServoAngle,
-            bool positiveClockwise,
-            double servoAngleOffsetFromVirtualZero,
-            double rotaryEncoderAngleOffsetFromServoAngle);
+        Servo(uint8_t pin, std::string axisName, Angle initialAngle = Angle::fromDegrees(90), uint16_t minPulseWidth = 544, uint16_t maxPulseWidth = 2400);
 
         // Initialize the servo
         bool start() override;
 
         // Move the servo to a specified position
-        bool setAngle(double angleDegrees) override;
-
+        bool setAngle(Angle angle);
+    
         // Get the position last written to the servo
-        double getAngle() const override;
+        Angle getAngle();
 
         // Get the name of the servo (for identification)
         std::string getAxisName() const override;
