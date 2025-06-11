@@ -19,7 +19,7 @@ p.setTimeStep(time_step)
 plane_id = p.loadURDF("plane.urdf")
 p.changeVisualShape(plane_id, -1, rgbaColor=[0.8, 0.8, 0.8, 1])
 
-arm_id = p.loadURDF("/src/urdf/4dof.urdf")
+arm_id = p.loadURDF("/src/urdf/onshape.urdf")
 p.resetBasePositionAndOrientation(arm_id, [0, 0, 0], [0, 0, 0, 1])
 arm_end_effector_index = 4
 

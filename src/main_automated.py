@@ -19,7 +19,10 @@ p.loadURDF("plane.urdf")
 # Load the robot arm
 arm_start_pos = [0, 0, 0]
 arm_start_orientation = p.getQuaternionFromEuler([0, 0, 0])
-arm_id = p.loadURDF("/src/urdf/4dof.urdf", arm_start_pos, arm_start_orientation, useFixedBase=True)
+arm_id = p.loadURDF("/src/urdf/onshape.urdf", arm_start_pos, arm_start_orientation, useFixedBase=True)
+
+p.resetDebugVisualizerCamera(cameraDistance=1.5, cameraYaw=30, cameraPitch=-30, cameraTargetPosition=[0,0,0])
+
 
 # Joint indices
 # Fixed joint index (not used in control)

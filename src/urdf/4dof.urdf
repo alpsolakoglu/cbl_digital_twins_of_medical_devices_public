@@ -83,14 +83,14 @@
 	<link name="arm_section_2">
 		<visual>
 			<geometry>
-				<cylinder length="0.35" radius="0.05"/>
+				<mesh filename="meshes/visual/A_section.stl" scale="0.003 0.003 0.003"/>
 			</geometry>
 			<material name="yellow"/>
 			<origin xyz="0 0 0.175" rpy="0 0 0"/> 
 		</visual>
 		<collision>
 			<geometry>
-				<cylinder length="0.5" radius="0.05"/>
+				<mesh filename="meshes/collision/A_section.stl" scale="0.003 0.003 0.003"/>
 			</geometry>
 			<origin xyz="0 0 0.175" rpy="0 0 0"/> 
 		</collision>
@@ -113,14 +113,14 @@
 	<link name="arm_section_3">
 		<visual>
 			<geometry>
-				<cylinder length="0.5" radius="0.05"/>
+				<mesh filename="meshes/visual/B_section.stl" scale="0.003 0.003 0.003"/>
 			</geometry>
 			<material name="green"/>
 			<origin xyz="0 0 0.25" rpy="0 0 0"/> 
 		</visual>
 		<collision>
 			<geometry>
-				<cylinder length="0.5" radius="0.05"/>
+				<mesh filename="meshes/collision/B_section.stl" scale="0.003 0.003 0.003"/>
 			</geometry>
 			<origin xyz="0 0 0.25" rpy="0 0 0"/> 
 		</collision>
@@ -143,14 +143,14 @@
 	<link name="arm_section_4">
 		<visual>
 			<geometry>
-				<cylinder length="0.25" radius="0.05"/>
+				<mesh filename="meshes/visual/C_axis.stl" scale="0.003 0.003 0.003"/>
 			</geometry>
 			<material name="blue"/>
 			<origin xyz="0 0 0.125" rpy="0 0 0"/> 
 		</visual>
 		<collision>
 			<geometry>
-				<cylinder length="0.25" radius="0.05"/>
+				<mesh filename="meshes/collision/C_axis.stl" scale="0.003 0.003 0.003"/>
 			</geometry>
 			<origin xyz="0 0 0.125" rpy="0 0 0"/> 
 		</collision>
