@@ -1,6 +1,7 @@
 #ifndef ROTARY_ENCODER_H
 #define ROTARY_ENCODER_H
 
+#include <IActuator.h>
 #include <Angle.h>
 #include <AS5600.h>
 
@@ -9,7 +10,7 @@
 
 namespace DT
 {
-    class RotaryEncoder
+    class RotaryEncoder : public IActuator
     {
     private:
         uint8_t m_channel;
@@ -25,7 +26,7 @@ namespace DT
         RotaryEncoder(uint8_t channel, std::string axisName, bool defaultPositiveClockwise);
 
         // Initialize the rotary encoder
-        bool start();
+        bool start() override;
 
         // Configure the rotary encoder
         bool configure();

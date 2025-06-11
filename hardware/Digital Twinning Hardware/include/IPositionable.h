@@ -1,6 +1,7 @@
-#ifndef IAXIS_H
-#define IAXIS_H
+#ifndef I_POSITIONABLE_AXIS_H
+#define I_POSITIONABLE_AXIS_H
 
+#include <IActuator.h>
 #include <Angle.h>
 
 #include <stdint.h>
@@ -8,19 +9,16 @@
 
 namespace DT
 {
-    class IAxis
+    class IPositionable : public IActuator
     {
     public:
-        // Attach the axis
-        virtual bool start() = 0;
-
         // Move the axis to a specified position
         virtual bool setAngle(Angle angle) = 0;
 
         // Get the current position of the axis
         virtual Angle getAngle() = 0;
 
-        // Get the name of the axis
+        // Get the name of the positionable axis
         virtual std::string getAxisName() const = 0;
     };
 }

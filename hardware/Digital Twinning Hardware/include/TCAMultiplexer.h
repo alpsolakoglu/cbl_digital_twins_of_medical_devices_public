@@ -1,13 +1,15 @@
 #ifndef TCAMULTIPLEXER_H
 #define TCAMULTIPLEXER_H
 
+#include <IActuator.h>
+
 #include <stdint.h>
 #include <mutex>
 #include <Optional.h>
 
 namespace DT
 {
-    class TCAMultiplexer
+    class TCAMultiplexer : public IActuator
     {
     private:
         static constexpr uint8_t m_TCA_ADDR = 0x70;
