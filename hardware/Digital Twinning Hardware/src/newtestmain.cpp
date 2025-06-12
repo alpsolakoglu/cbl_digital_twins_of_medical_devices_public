@@ -1,8 +1,10 @@
 #include <ServoRotary.h>
+#include <Motor.h>
 
 DT::ServoRotary axisA = DT::ServoRotary(4, 5, "A", true, DT::Angle::fromDegrees(90.0));
 DT::ServoRotary axisB = DT::ServoRotary(5, 4, "B", true, DT::Angle::fromDegrees(175.0));
 DT::ServoRotary axisC = DT::ServoRotary(16, 3, "C", false, DT::Angle::fromDegrees(95.0));
+DT::Motor motorR = DT::Motor(2, "R");
 
 
 bool flip = true;
@@ -16,6 +18,7 @@ void setup() {
   axisC.start();
   axisB.start();
   axisA.start();
+  motorR.start();
 }
 
 void loop() {
@@ -29,15 +32,18 @@ void loop() {
   Serial.println("Axis C: " + String(angleC.getInDegrees()) + " degrees");
   Serial.println("-----");
 
-  if (counter % 4 == 0) {
+  uint16_t pulseWidthRange = motorR.getMaxPulseWidth() - motorR.getMinPulseWidth();
+  if (counter % 2 == 0) {
     if (flip) {
-      axisA.setAngleWithRotary(DT::Angle::fromDegrees(0));
-      axisB.setAngleWithRotary(DT::Angle::fromDegrees(0));
-      axisC.setAngleWithRotary(DT::Angle::fromDegrees(0));
+      motorR.drive(motorR.getMinPulseWidth() + pulseWidthRange / 4);
+      // axisA.setAngleWithRotary(DT::Angle::fromDegrees(0));
+      // axisB.setAngleWithRotary(DT::Angle::fromDegrees(0));
+      // axisC.setAngleWithRotary(DT::Angle::fromDegrees(0));
     } else {
-      axisA.setAngleWithRotary(DT::Angle::fromDegrees(45));
-      axisB.setAngleWithRotary(DT::Angle::fromDegrees(90));
-      axisC.setAngleWithRotary(DT::Angle::fromDegrees(35));
+      motorR.drive(motorR.getMaxPulseWidth() - pulseWidthRange / 4);
+      // axisA.setAngleWithRotary(DT::Angle::fromDegrees(45));
+      // axisB.setAngleWithRotary(DT::Angle::fromDegrees(90));
+      // axisC.setAngleWithRotary(DT::Angle::fromDegrees(35));
     }
     flip = !flip;
     counter = 0;

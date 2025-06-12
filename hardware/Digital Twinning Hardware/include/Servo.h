@@ -1,7 +1,7 @@
 #ifndef SERVOCONTROLLER_H
 #define SERVOCONTROLLER_H
 
-#include <IAxis.h>
+#include <IPositionable.h>
 #include <Angle.h>
 
 #include <ESP32Servo.h>
@@ -10,7 +10,7 @@
 
 namespace DT
 {
-    class Servo : public IAxis
+    class Servo : public IPositionable
     {
     protected:
         uint8_t m_pin; // Pin number for the servo
