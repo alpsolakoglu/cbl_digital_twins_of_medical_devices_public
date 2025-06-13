@@ -86,13 +86,13 @@
 				<mesh filename="meshes/visual/A_section.stl" scale="0.006 0.006 0.006"/>
 			</geometry>
             <material name="yellow"/>
-			<origin xyz="0 0 0.012" rpy="1.570796 0 0"/> 
+			<origin xyz="0 0 -0.45" rpy="1.570796 0 -0.5"/> 
 		</visual>
 		<collision>
 			<geometry>
-				<mesh filename="meshes/collision/A_section_collision.stl" scale="0.006 0.006 0.006"/>
+				<mesh filename="meshes/collision/A_section_collision.stl" scale="0.005 0.005 0.005"/>
 			</geometry>
-			<origin xyz="0 0 0.012" rpy="1.570796 0 0"/> 
+			<origin xyz="0 0 -0.45" rpy="1.570796 0.05 -0.5"/> 
 		</collision>
 		<!-- Check intertial values-->
 		<inertial>
@@ -105,9 +105,9 @@
     <joint name="a_axis" type="revolute">
 		<parent link="arm_section_1"/>
 		<child link="arm_section_2"/>
-		<origin xyz="0 0 0.012" rpy="0 0 0"/>
-		<axis xyz="0 1 0"/>
-		<limit lower="-1.57079632679" upper="1.57079632679" effort="0" velocity="0.174533"/>
+		<origin xyz="0 0 0.45" rpy="0 0 0.5"/>
+		<axis xyz="0 0.5 0"/>
+		<limit lower="-0.77" upper="0.77" effort="0" velocity="0.174533"/>
 	</joint>
 
     <link name="arm_section_3">
@@ -116,18 +116,18 @@
 				<mesh filename="meshes/visual/B_section.stl" scale="0.006 0.006 0.006"/>
 			</geometry>
 			<material name="green"/>
-			<origin xyz="0 0 0.2" rpy="1.570796 0 0"/> 
+			<origin xyz="0.6 -0.2 -1.15" rpy="1.570796 0 -0.5"/> 
 		</visual>
 		<collision>
 			<geometry>
-				<mesh filename="meshes/collision/B_section_collision.stl" scale="0.006 0.006 0.006"/>
+				<mesh filename="meshes/collision/B_section_collision.stl" scale="0.005 0.005 0.005"/>
 			</geometry>
-			<origin xyz="0 0 0.2" rpy="1.570796 0 0"/> 
+			<origin xyz="0.6 -0.2 -1.15" rpy="1.570796 0 -0.5"/> 
 		</collision>
 		<!-- Check intertial values-->
 		<inertial>
 			<mass value="1.0"/>
-			<origin rpy="0 0 0.2" xyz="0 0 1"/>
+			<origin rpy="0 0 0" xyz="0 0 1"/>
 			<inertia ixx="0.0027" iyy="0.0027" izz="0.005" ixy="0" ixz="0" iyz="0"/>
 		</inertial>
 	</link>
@@ -135,9 +135,39 @@
     <joint name="b_axis" type="revolute">
 		<parent link="arm_section_2"/>
 		<child link="arm_section_3"/>
-		<origin xyz="0 0 0" rpy="0 0 0"/>
-		<axis xyz="1 0 0"/>
-		<limit lower="0" upper="2.8" effort="0" velocity="0.174533"/>
+		<origin xyz="-0.6 0.2 0.7" rpy="0 0 0"/>
+		<axis xyz="0 1 0"/>
+		<limit lower="-0.6" upper="0.6" effort="0" velocity="0.174533"/>
+	</joint>
+
+	<link name="arm_section_4">
+		<visual>
+			<geometry>
+				<mesh filename="meshes/visual/C_section.stl" scale="0.005 0.005 0.005"/>
+			</geometry>
+			<material name="blue"/>
+			<origin xyz="1.05 -0.21 -0.5" rpy="1.570796 0 -0.5"/> 
+		</visual>
+		<collision>
+			<geometry>
+				<mesh filename="meshes/collision/C_section_collision.stl" scale="0.005 0.005 0.005"/>
+			</geometry>
+			<origin xyz="1.05 -0.21 -0.5" rpy="1.570796 0 -0.5"/> 
+		</collision>
+		<!-- Check intertial values-->
+		<inertial>
+			<mass value="1.0"/>
+			<origin rpy="0 0 0" xyz="0 0 1"/>
+			<inertia ixx="0.0027" iyy="0.0027" izz="0.005" ixy="0" ixz="0" iyz="0"/>
+		</inertial>
+	</link>
+
+    <joint name="c_axis" type="revolute">
+		<parent link="arm_section_3"/>
+		<child link="arm_section_4"/>
+		<origin xyz="-0.65 0 -0.55" rpy="0 0 0"/>
+		<axis xyz="0 1 0"/>
+		<limit lower="-0.6" upper="0.6" effort="0" velocity="0.174533"/>
 	</joint>
 
 </robot>
