@@ -1,15 +1,10 @@
-#ifndef ROTARY_SERVO_H
-#define ROTARY_SERVO_H
-
-#include <Servo.h>
-#include <RotaryEncoder.h>
 
 #include <stdint.h>
 #include <string>
 
 namespace DT
 {
-    class ServoRotary : public Servo
+    class ServoRotaryAAA : public Servo
     {
     private:
         bool m_positiveClockwise;           // Direction of rotation: true for positive clockwise, false for negative clockwise
@@ -31,4 +26,3 @@ namespace DT
     };
 }
 
-#endif

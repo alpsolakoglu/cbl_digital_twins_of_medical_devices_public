@@ -1,11 +1,11 @@
 #ifndef TCAMULTIPLEXER_H
 #define TCAMULTIPLEXER_H
 
-#include <IActuator.h>
+#include "interfaces/IActuator.h"
+#include "utils/Optional.h"
 
 #include <stdint.h>
 #include <mutex>
-#include <Optional.h>
 
 namespace DT
 {

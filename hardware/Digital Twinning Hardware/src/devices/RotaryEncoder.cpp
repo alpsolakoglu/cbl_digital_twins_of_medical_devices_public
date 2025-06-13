@@ -1,12 +1,13 @@
 
-#include <RotaryEncoder.h>
-#include <TCAMultiplexer.h>
+#include "devices/RotaryEncoder.h"
+#include "devices/TCAMultiplexer.h"
+
 #include <AS5600.h>
 
 namespace DT
 {
-    RotaryEncoder::RotaryEncoder(uint8_t channel, std::string axisName, bool defaultPositiveClockwise)
-        : m_channel(channel), m_axisName(axisName), m_defaultPositiveClockwise(defaultPositiveClockwise), m_lastReadAngle(Angle::fromRadians(0)) {}
+    RotaryEncoder::RotaryEncoder(uint8_t channel, bool defaultPositiveClockwise)
+        : m_channel(channel), m_defaultPositiveClockwise(defaultPositiveClockwise), m_lastReadAngle(Angle::fromRadians(0)) {}
 
     bool RotaryEncoder::start()
     {
@@ -88,12 +89,6 @@ namespace DT
     uint8_t RotaryEncoder::getChannel() const
     {
         return m_channel;
-    }
-
-    std::string RotaryEncoder::getAxisName() const
-    {
-        // Return the axis name for identification
-        return m_axisName;
     }
 
     bool RotaryEncoder::getDefaultPositiveClockwise() const

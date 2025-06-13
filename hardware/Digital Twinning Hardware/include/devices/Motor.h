@@ -1,7 +1,8 @@
 #ifndef MOTOR_H
 #define MOTOR_H
 
-#include <IDriveable.h>
+#include "interfaces/IDriveable.h"
+
 #include <ESP32Servo.h>
 #include <stdint.h>
 
@@ -19,7 +20,7 @@ namespace DT
         bool m_started = false; // Flag to check if the motor is initialized
     public:
         // Constructor to initialize the motor on a specific pin
-        Motor(uint8_t pin, std::string axisName, uint16_t minPulseWidth = 544, uint16_t maxPulseWidth = 2400);
+        Motor(uint8_t pin, std::string axisName, uint16_t minPulseWidth = 500, uint16_t maxPulseWidth = 2500);
 
         bool start() override;
 

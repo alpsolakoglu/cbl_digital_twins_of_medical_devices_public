@@ -1,10 +1,10 @@
 #ifndef ROTARY_ENCODER_H
 #define ROTARY_ENCODER_H
 
-#include <IActuator.h>
-#include <Angle.h>
-#include <AS5600.h>
+#include "interfaces/IActuator.h"
+#include "utils/Angle.h"
 
+#include <AS5600.h>
 #include <stdint.h>
 #include <string>
 
@@ -23,7 +23,7 @@ namespace DT
 
     public:
         // Constructor to initialize the rotary encoder on a specific pin and channel
-        RotaryEncoder(uint8_t channel, std::string axisName, bool defaultPositiveClockwise);
+        RotaryEncoder(uint8_t channel, bool defaultPositiveClockwise);
 
         // Initialize the rotary encoder
         bool start() override;
@@ -39,9 +39,6 @@ namespace DT
 
         // Get the last read angle
         uint8_t getChannel() const;
-
-        // Get the axis name for identification
-        std::string getAxisName() const;
 
         // Get default positive clockwise direction
         bool getDefaultPositiveClockwise() const;

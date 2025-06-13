@@ -1,11 +1,12 @@
-#include <Servo.h>
+#include "devices/Servo.h"
+
 #include <ESP32Servo.h>
 
 namespace DT
 {
     // Constructor to initialize the servo on a specific pin
-    Servo::Servo(uint8_t pin, std::string axisName, Angle initialAngle, uint16_t minPulseWidth, uint16_t maxPulseWidth)
-        : m_pin(pin), m_axisName(axisName), m_lastSetAngle(initialAngle), m_initialAngle(initialAngle),
+    Servo::Servo(uint8_t pin, Angle initialAngle, uint16_t minPulseWidth, uint16_t maxPulseWidth)
+        : m_pin(pin), m_lastSetAngle(initialAngle), m_initialAngle(initialAngle),
           m_minPulseWidth(minPulseWidth), m_maxPulseWidth(maxPulseWidth) {}
 
     // Initialize the servo
@@ -52,11 +53,5 @@ namespace DT
         }
 
         return Angle::fromDegrees(m_servo.read());
-    }
-
-    // Get the name of the servo (for identification)
-    std::string Servo::getAxisName() const
-    {
-        return m_axisName;
     }
 }

@@ -1,8 +1,8 @@
 #ifndef I_POSITIONABLE_AXIS_H
 #define I_POSITIONABLE_AXIS_H
 
-#include <IActuator.h>
-#include <Angle.h>
+#include "interfaces/IActuator.h"
+#include "utils/Angle.h"
 
 #include <stdint.h>
 #include <string>
@@ -17,9 +17,6 @@ namespace DT
 
         // Get the current position of the axis
         virtual Angle getAngle() = 0;
-
-        // Get the name of the positionable axis
-        virtual std::string getAxisName() const = 0;
     };
 }
 
