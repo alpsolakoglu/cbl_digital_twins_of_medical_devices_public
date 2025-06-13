@@ -3,8 +3,12 @@
 namespace DT
 {
     // Constructor to initialize the servo on a specific pin
-    Motor::Motor(uint8_t pin, std::string axisName, uint16_t minPulseWidth, uint16_t maxPulseWidth)
-        : m_pin(pin), m_axisName(axisName), m_minPulseWidth(minPulseWidth), m_maxPulseWidth(maxPulseWidth) {}
+    Motor::Motor(uint8_t pin, bool positiveClockwise, uint16_t minPulseWidth, uint16_t maxPulseWidth)
+        : m_pin(pin),
+          m_positiveClockwise(positiveClockwise),
+          m_minPulseWidth(minPulseWidth),
+          m_maxPulseWidth(maxPulseWidth),
+          m_middlePulseWidth(minPulseWidth + (maxPulseWidth - minPulseWidth) / 2) {}
 
     // Initialize the servo
     bool Motor::start()
@@ -15,9 +19,9 @@ namespace DT
             return true; // Already started, no need to reinitialize
         }
 
-        m_motor.attach(m_pin, m_minPulseWidth, m_maxPulseWidth); // Attach the servo to the specified pin with pulse width limits
+        m_servo.attach(m_pin, m_minPulseWidth, m_maxPulseWidth); // Attach the servo to the specified pin with pulse width limits
 
-        if (m_motor.attached() == false)
+        if (m_servo.attached() == false)
         {
             Serial.println("Failed to attach servo on pin " + String(m_pin));
             return false; // Failed to attach the servo
@@ -42,7 +46,57 @@ namespace DT
         }
 
         Serial.println("Setting motor pulse width to: " + String(pulseWidth));
-        m_motor.writeMicroseconds(pulseWidth);
+        m_servo.writeMicroseconds(pulseWidth);
+        return true;
+    }
+
+    bool Motor::move(double speed, bool clockwise)
+    {
+        if (!m_started)
+        {
+            Serial.println("Motor not started. Call start() first.");
+            return false; // Motor not started
+        }
+
+        if (speed < 0.0 || speed > 1.0)
+        {
+            Serial.println("Invalid speed: " + String(speed) + ". Must be between 0.0 and 1.0");
+            return false; // Invalid speed
+        }
+
+        uint16_t pulseWidth;
+        uint16_t pulseWidthOffset = ((double)(m_maxPulseWidth - m_minPulseWidth)) / 2.0 * speed;
+
+        if (m_positiveClockwise && clockwise || !m_positiveClockwise && !clockwise)
+        {
+            pulseWidth = m_middlePulseWidth + pulseWidthOffset;
+            if (pulseWidth > m_maxPulseWidth)
+            {
+                pulseWidth = m_maxPulseWidth; // Cap to max pulse width (even though it should not go over with the validated speed)
+            }
+        }
+        else if (m_positiveClockwise && !clockwise || !m_positiveClockwise && clockwise)
+        {
+            pulseWidth = m_middlePulseWidth - pulseWidthOffset;
+            if (pulseWidth < m_minPulseWidth)
+            {
+                pulseWidth = m_minPulseWidth; // Cap to min pulse width (even though it should not go under with the validated speed)
+            }
+        }
+
+        return drive(pulseWidth); // Set the motor
+    }
+
+    bool Motor::stop()
+    {
+        if (!m_started)
+        {
+            Serial.println("Motor not started. Call start() first.");
+            return false; // Motor not started
+        }
+
+        Serial.println("Stopping motor on pin " + String(m_pin));
+        drive(m_middlePulseWidth); // Set to no movement
         return true;
     }
 
