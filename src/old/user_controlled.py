@@ -36,6 +36,13 @@ A_AXIS_JOINT_IDX = 2
 B_AXIS_JOINT_IDX = 3
 C_AXIS_JOINT_IDX = 4
 
+JOINT_OFFSETS = {
+    R_AXIS_JOINT_IDX: 0.0,              
+    A_AXIS_JOINT_IDX: 0.55,     
+    B_AXIS_JOINT_IDX: 1.8,              
+    C_AXIS_JOINT_IDX: 0.8     
+}
+
 # Infinite simulation loop
 while True:
     r_axis_deg = p.readUserDebugParameter(r_axis_slider)
@@ -48,10 +55,16 @@ while True:
     b_axis_rad = math.radians(b_axis_deg)
     c_axis_rad = math.radians(c_axis_deg)
 
-    p.setJointMotorControl2(arm_id, R_AXIS_JOINT_IDX, p.POSITION_CONTROL, targetPosition=r_axis_rad)
-    p.setJointMotorControl2(arm_id, A_AXIS_JOINT_IDX, p.POSITION_CONTROL, targetPosition=a_axis_rad)
-    p.setJointMotorControl2(arm_id, B_AXIS_JOINT_IDX, p.POSITION_CONTROL, targetPosition=b_axis_rad)
-    p.setJointMotorControl2(arm_id, C_AXIS_JOINT_IDX, p.POSITION_CONTROL, targetPosition=c_axis_rad)
+    target_r_axis_rad = r_axis_rad + JOINT_OFFSETS[R_AXIS_JOINT_IDX]
+    target_a_axis_rad = a_axis_rad + JOINT_OFFSETS[A_AXIS_JOINT_IDX]
+    target_b_axis_rad = b_axis_rad + JOINT_OFFSETS[B_AXIS_JOINT_IDX]
+    target_c_axis_rad = c_axis_rad + JOINT_OFFSETS[C_AXIS_JOINT_IDX]
+
+    p.setJointMotorControl2(arm_id, R_AXIS_JOINT_IDX, p.POSITION_CONTROL, targetPosition=target_r_axis_rad)
+    p.setJointMotorControl2(arm_id, A_AXIS_JOINT_IDX, p.POSITION_CONTROL, targetPosition=target_a_axis_rad)
+    p.setJointMotorControl2(arm_id, B_AXIS_JOINT_IDX, p.POSITION_CONTROL, targetPosition=target_b_axis_rad)
+    p.setJointMotorControl2(arm_id, C_AXIS_JOINT_IDX, p.POSITION_CONTROL, targetPosition=target_c_axis_rad)
+
 
     p.stepSimulation()
     time.sleep(time_step)
