@@ -107,20 +107,16 @@ namespace DT
         return mappedValue;
     }
 
+    Angle Angle::delta(Angle angle1, Angle angle2)
+    {
+        Angle delta = Angle::fromDegrees(angle2.getInDegrees() - angle1.getInDegrees());
+        double deltaDegrees = delta.getInDegrees();
+
+        return deltaDegrees <= 180.0 ? delta : Angle::fromDegrees(360.0 - deltaDegrees);
+    }
+
     bool Angle::isWithinDelta(Angle angle1, Angle angle2, Angle delta)
     {
-        double deltaDegrees = Angle::fromDegrees(angle2.getInDegrees() - angle1.getInDegrees()).getInDegrees();
-        double deltaDegreesShortestArc;
-
-        if (deltaDegrees < 360.0 - deltaDegrees)
-        {
-            deltaDegreesShortestArc = deltaDegrees;
-        }
-        else
-        {
-            deltaDegreesShortestArc = 360.0 - deltaDegrees;
-        }
-
-        return deltaDegreesShortestArc <= delta.getInDegrees();
+        return Angle::delta(angle1, angle2).getInDegrees() <= delta.getInDegrees();
     }
 }

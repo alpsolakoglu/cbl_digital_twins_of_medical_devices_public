@@ -3,13 +3,13 @@
 namespace DT
 {
     ServoRotary::ServoRotary(uint8_t pin, uint8_t channel, std::string axisName,
-                             bool positiveClockwise,
+                             bool servoPositiveClockwise,
+                             bool rotaryEncoderPositiveClockwise,
                              Angle initialAngle,
                              uint16_t minPulseWidth, uint16_t maxPulseWidth)
-        : m_servo(pin, initialAngle, minPulseWidth, maxPulseWidth),
-          m_rotaryEncoder(channel, positiveClockwise),
+        : m_servo(pin, servoPositiveClockwise, initialAngle, minPulseWidth, maxPulseWidth),
+          m_rotaryEncoder(channel, rotaryEncoderPositiveClockwise),
           m_axisName(axisName),
-          m_positiveClockwise(positiveClockwise),
           m_initialAngle(initialAngle) {};
 
     bool ServoRotary::start()
@@ -64,13 +64,13 @@ namespace DT
         }
 
         Angle angleWithServoOffset = desiredAngle; // Start with the input angle
-        if (m_positiveClockwise)
+        if (m_servo.getPositiveClockwise())
         {
-            angleWithServoOffset = Angle::fromDegrees(m_initialAngle.getInDegrees() - desiredAngle.getInDegrees());
+            angleWithServoOffset = Angle::fromDegrees(m_initialAngle.getInDegrees() + desiredAngle.getInDegrees());
         }
         else
         {
-            angleWithServoOffset = Angle::fromDegrees(m_initialAngle.getInDegrees() + desiredAngle.getInDegrees());
+            angleWithServoOffset = Angle::fromDegrees(m_initialAngle.getInDegrees() - desiredAngle.getInDegrees());
         }
 
         // Set the servo angle

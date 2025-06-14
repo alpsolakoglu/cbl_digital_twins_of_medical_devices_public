@@ -9,7 +9,7 @@
 
 namespace DT
 {
-    class ServoRotary : public IPositionable
+    class ServoRotary
     {
     private:
         bool m_positiveClockwise; // Direction of rotation: true for positive clockwise, false for negative clockwise
@@ -22,21 +22,22 @@ namespace DT
     public:
         // Constructor to initialize the servo on a specific pin
         ServoRotary(uint8_t pin, uint8_t channel, std::string axisName,
-                    bool positiveClockwise,
+                    bool servoPositiveClockwise,
+                    bool rotaryEncoderPositiveClockwise,
                     Angle initialAngle = Angle::fromDegrees(90),
                     uint16_t minPulseWidth = 500, uint16_t maxPulseWidth = 2500);
 
-        bool start() override;
+        bool start();
 
         bool setToInitialAngle();
 
         bool setRotaryEncoderZero();
 
-        bool setAngle(Angle angle) override;
+        bool setAngle(Angle angle);
 
-        Angle getAngle() override;
+        Angle getAngle();
 
-        std::string getAxisName() const;
+        std::string getAxisName();
     };
 }
 

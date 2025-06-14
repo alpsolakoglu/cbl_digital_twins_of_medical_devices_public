@@ -10,7 +10,7 @@ namespace DT
 {
     class IDriveable : public IActuator
     {
-    public:
+    private:
         // Move the axis to a specified position
         virtual bool drive(uint16_t pulseWidth) = 0;
     };

@@ -45,7 +45,7 @@ namespace DT
             return false; // Invalid pulse width
         }
 
-        Serial.println("Setting motor pulse width to: " + String(pulseWidth));
+        // Serial.println("Setting motor pulse width to: " + String(pulseWidth));
         m_servo.writeMicroseconds(pulseWidth);
         return true;
     }

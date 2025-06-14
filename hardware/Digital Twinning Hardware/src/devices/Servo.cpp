@@ -5,9 +5,13 @@
 namespace DT
 {
     // Constructor to initialize the servo on a specific pin
-    Servo::Servo(uint8_t pin, Angle initialAngle, uint16_t minPulseWidth, uint16_t maxPulseWidth)
-        : m_pin(pin), m_lastSetAngle(initialAngle), m_initialAngle(initialAngle),
-          m_minPulseWidth(minPulseWidth), m_maxPulseWidth(maxPulseWidth) {}
+    Servo::Servo(uint8_t pin, bool positiveClockwise, Angle initialAngle, uint16_t minPulseWidth, uint16_t maxPulseWidth)
+        : m_pin(pin),
+          m_positiveClockwise(positiveClockwise),
+          m_lastSetAngle(initialAngle),
+          m_initialAngle(initialAngle),
+          m_minPulseWidth(minPulseWidth),
+          m_maxPulseWidth(maxPulseWidth) {}
 
     // Initialize the servo
     bool Servo::start()
@@ -53,5 +57,10 @@ namespace DT
         }
 
         return Angle::fromDegrees(m_servo.read());
+    }
+
+    bool Servo::getPositiveClockwise() const
+    {
+        return m_positiveClockwise;
     }
 }

@@ -31,7 +31,7 @@ namespace DT
         static TCAMultiplexer &getInstance();
 
         // Initialize the multiplexer
-        bool start();
+        bool start() override;
 
         // Ensure channel cannot be changed while in use
         template <typename F>

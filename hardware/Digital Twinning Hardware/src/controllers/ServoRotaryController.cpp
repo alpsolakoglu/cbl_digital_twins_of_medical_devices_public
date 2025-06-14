@@ -6,7 +6,8 @@ namespace DT
     ServoRotaryController::ServoRotaryController(uint16_t pin,
                                                  uint8_t channel,
                                                  std::string axisName,
-                                                 bool positiveClockwise,
+                                                 bool servoPositiveClockwise,
+                                                 bool rotaryEncoderPositiveClockwise,
                                                  Angle initialAngle,
                                                  uint16_t minPulseWidth,
                                                  uint16_t maxPulseWidth,
@@ -16,12 +17,14 @@ namespace DT
         : m_servoRotary(pin,
                         channel,
                         axisName,
-                        positiveClockwise,
+                        servoPositiveClockwise,
+                        rotaryEncoderPositiveClockwise,
                         initialAngle,
                         minPulseWidth,
                         maxPulseWidth),
           m_configureWaitTimeMs(configureWaitTimeMs),
           m_commandTimeoutMs(commandTimeoutMs),
+          m_awaitingCommandDelayMs(awaitingCommandDelayMs),
           m_commandAngle(Angle::fromDegrees(0.0)),
           m_axisName(axisName),
           m_initialAngle(initialAngle) {};
@@ -146,7 +149,7 @@ namespace DT
 
     void ServoRotaryController::onAwaitingCommand()
     {
-        if (millis() - m_awaitingCommandStartTime < m_configureWaitTimeMs)
+        if (millis() - m_awaitingCommandStartTime < m_awaitingCommandDelayMs)
         {
             // Delay before awaiting command to go easy on the servos and to let the system stabilize
             return;
@@ -175,6 +178,8 @@ namespace DT
         if (millis() - m_commandStartTime >= m_commandTimeoutMs)
         {
             Serial.println("Command timeout reached for ServoRotaryController.");
+
+            m_awaitingCommandStartTime = millis(); // Record the start time for the awaiting command state
             m_state = ControllerState::AWAITING_COMMAND; // Change state to ERROR if command timeout occurs
             return;
         }

@@ -3,11 +3,12 @@
 namespace DT
 {
     MotorRotary::MotorRotary(uint8_t pin, uint8_t channel, std::string axisName,
-                             bool positiveClockwise,
+                             bool motorPositiveClockwise,
+                             bool rotaryEncoderPositiveClockwise,
                              Angle initialAngle,
                              uint16_t minPulseWidth, uint16_t maxPulseWidth)
-        : m_motor(pin, minPulseWidth, maxPulseWidth),
-          m_rotaryEncoder(channel, positiveClockwise),
+        : m_motor(pin, motorPositiveClockwise, minPulseWidth, maxPulseWidth),
+          m_rotaryEncoder(channel, rotaryEncoderPositiveClockwise),
           m_axisName(axisName),
           m_initialAngle(initialAngle) {};
 
@@ -50,7 +51,7 @@ namespace DT
         return true; // Successfully configured the rotary encoder
     }
 
-    bool MotorRotary::move(double speed, bool clockwise)
+    bool MotorRotary::drive(double speed, bool clockwise)
     {
         if (!m_started)
         {

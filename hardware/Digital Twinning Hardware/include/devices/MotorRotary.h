@@ -10,11 +10,11 @@
 
 namespace DT
 {
-    class MotorRotary : public IDriveable
+    class MotorRotary
     {
     private:
-        std::string m_axisName;   // Name of the axis for identification
-        Angle m_initialAngle;     // Initial angle for reference
+        std::string m_axisName; // Name of the axis for identification
+        Angle m_initialAngle;   // Initial angle for reference
 
         bool m_started = false;        // Flag to check if the servo and rotary encoder are initialized
         Motor m_motor;                 // ESP32Servo instance for controlling the servo
@@ -22,15 +22,16 @@ namespace DT
     public:
         // Constructor to initialize the servo on a specific pin
         MotorRotary(uint8_t pin, uint8_t channel, std::string axisName,
-                    bool positiveClockwise,
+                    bool motorPositiveClockwise,
+                    bool rotaryEncoderPositiveClockwise,
                     Angle initialAngle = Angle::fromDegrees(90),
                     uint16_t minPulseWidth = 500, uint16_t maxPulseWidth = 2500);
 
-        bool start() override;
+        bool start();
 
         bool setRotaryEncoderZero();
 
-        bool move(double speed, bool clockwise);
+        bool drive(double speed, bool clockwise);
 
         bool stop();
 

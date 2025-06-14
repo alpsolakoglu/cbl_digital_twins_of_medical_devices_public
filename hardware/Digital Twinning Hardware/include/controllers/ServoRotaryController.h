@@ -23,10 +23,10 @@ namespace DT
         Angle m_initialAngle;
         Angle m_commandAngle; // The angle to be set for the servo
 
-        uint16_t m_configureWaitTimeMs; // Wait time for configuration in seconds
-        uint16_t m_commandTimeoutMs;    // Timeout duration for the controller
+        uint16_t m_configureWaitTimeMs;    // Wait time for configuration in seconds
+        uint16_t m_commandTimeoutMs;       // Timeout duration for the controller
         uint16_t m_awaitingCommandDelayMs; // Delay before awaiting command in seconds
-        std::string m_axisName;              // Name of the axis for identification
+        std::string m_axisName;            // Name of the axis for identification
 
         // bool setAngle(Angle angle);
 
@@ -44,7 +44,8 @@ namespace DT
         ServoRotaryController(uint16_t pin,
                               uint8_t channel,
                               std::string axisName,
-                              bool positiveClockwise,
+                              bool servoPositiveClockwise,
+                              bool rotaryEncoderPositiveClockwise,
                               Angle initialAngle = Angle::fromDegrees(90),
                               uint16_t minPulseWidth = 500,
                               uint16_t maxPulseWidth = 2500,

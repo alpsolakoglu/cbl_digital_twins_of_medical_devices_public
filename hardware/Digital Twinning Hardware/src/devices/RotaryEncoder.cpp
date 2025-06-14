@@ -6,8 +6,8 @@
 
 namespace DT
 {
-    RotaryEncoder::RotaryEncoder(uint8_t channel, bool defaultPositiveClockwise)
-        : m_channel(channel), m_defaultPositiveClockwise(defaultPositiveClockwise), m_lastReadAngle(Angle::fromRadians(0)) {}
+    RotaryEncoder::RotaryEncoder(uint8_t channel, bool positiveClockwise)
+        : m_channel(channel), m_positiveClockwise(positiveClockwise), m_lastReadAngle(Angle::fromRadians(0)) {}
 
     bool RotaryEncoder::start()
     {
@@ -47,7 +47,7 @@ namespace DT
         auto result = TCAMultiplexer::getInstance().withChannel(m_channel, [&]()
         {
             m_sensor.setZPosition(m_sensor.readAngle());               // Set the zero position to 0 degrees
-            m_sensor.setDirection(m_defaultPositiveClockwise ? 1 : 0); // Set the direction towards the esp32 on the wooden plate to be positive
+            m_sensor.setDirection(m_positiveClockwise ? 0 : 1); // Set the direction towards the esp32 on the wooden plate to be positive (or clockwise from top for R axis)
             delay(1000);                                               // Allow time for the sensor to stabilize
             return true;                                               // Successfully configured the encoder
         });
@@ -91,8 +91,8 @@ namespace DT
         return m_channel;
     }
 
-    bool RotaryEncoder::getDefaultPositiveClockwise() const
+    bool RotaryEncoder::getPositiveClockwise() const
     {
-        return m_defaultPositiveClockwise;
+        return m_positiveClockwise;
     }
 }
