@@ -9,10 +9,10 @@ def main():
     simulation_queue = mp.Queue()  # For sending data to simulation
     controller_queue = mp.Queue()  # For sending data to controller
 
-    simulation_queue.put({"type": "set_axis_angle", "axis_angle_degrees": 90, "axis_name": "B"})  # Example input for simulation
-    simulation_queue.put({"type": "set_axis_angle", "axis_angle_degrees": 0, "axis_name": "B"})  # Example input for simulation
-    simulation_queue.put({"type": "set_axis_angle", "axis_angle_degrees": 90, "axis_name": "B"})  # Example input for simulation
-    simulation_queue.put({"type": "set_axis_angle", "axis_angle_degrees": 0, "axis_name": "B"})  # Example input for simulation
+    # simulation_queue.put({"type": "set_axis_angle", "axis_angle_degrees": 90, "axis_name": "B"})  # Example input for simulation
+    # simulation_queue.put({"type": "set_axis_angle", "axis_angle_degrees": 0, "axis_name": "B"})  # Example input for simulation
+    # simulation_queue.put({"type": "set_axis_angle", "axis_angle_degrees": 90, "axis_name": "B"})  # Example input for simulation
+    # simulation_queue.put({"type": "set_axis_angle", "axis_angle_degrees": 0, "axis_name": "B"})  # Example input for simulation
 
    
 

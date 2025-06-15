@@ -31,6 +31,32 @@ def start(controller_queue, simulation_queue):
     B_AXIS_JOINT_IDX = 3
     C_AXIS_JOINT_IDX = 4
 
+    JOINT_OFFSETS = {
+        R_AXIS_JOINT_IDX: 0.0,
+        A_AXIS_JOINT_IDX: 0.55,
+        B_AXIS_JOINT_IDX: 1.8,
+        C_AXIS_JOINT_IDX: 0.8
+    }
+
+    arm_end_effector_index = C_AXIS_JOINT_IDX
+    num_joints = p.getNumJoints(arm_id)
+
+    movable_joint_indices = []
+    lower_limits = []
+    upper_limits = []
+    joint_ranges = []
+    rest_poses = []
+
+    for i in range(num_joints):
+        joint_info = p.getJointInfo(arm_id, i)
+        if joint_info[2] == p.JOINT_REVOLUTE:
+            joint_index = joint_info[0]
+            movable_joint_indices.append(joint_index)
+            lower_limits.append(joint_info[8])
+            upper_limits.append(joint_info[9])
+            joint_ranges.append(joint_info[9] - joint_info[8])
+            rest_poses.append(JOINT_OFFSETS.get(joint_index, 0))
+
     # Infinite simulation loop
     while True:
         if simulation_queue.empty():
@@ -41,58 +67,38 @@ def start(controller_queue, simulation_queue):
             controller_queue.put({"type": "stop"})
             print("Simulation: Stopping simulation.")
             break
-        elif message["type"] == "set_axis_angle":
-            axis_angle_degrees = message["axis_angle_degrees"]
-            axis_name = message["axis_name"]
+        elif message["type"] == "set_all_angles":
+                joint_angles_rad = message["angles_rad"]
+                if len(joint_angles_rad) == len(movable_joint_indices):
+                    for i, joint_index in enumerate(movable_joint_indices):
+                        p.setJointMotorControl2(
+                            arm_id, 
+                            joint_index, 
+                            p.POSITION_CONTROL, 
+                            targetPosition=joint_angles_rad[i]
+                        )
 
-            axis_id = None
-            match axis_name:
-                case "R":
-                    axis_id = R_AXIS_JOINT_IDX
-                case "A":
-                    axis_id = A_AXIS_JOINT_IDX
-                case "B":
-                    axis_id = B_AXIS_JOINT_IDX
-                case "C":
-                    axis_id = C_AXIS_JOINT_IDX
-                case _:
-                    print(f"Invalid axis letter: {message['axis_letter']}")
-                    continue
-
-            axis_angle_rad = math.radians(axis_angle_degrees)
-            p.setJointMotorControl2(arm_id, axis_id, p.POSITION_CONTROL, targetPosition=axis_angle_rad)
-
-            desired_angle_reached = False
-            start_time = time.time()
-            timeout_duration_seconds = 5
-            while time.time() - start_time < timeout_duration_seconds:
-                p.stepSimulation()
-                time.sleep(time_step)
-
-                # Check if the joint angle is within a small epsilon of the target angle
-                joint_state = p.getJointState(arm_id, axis_id)
-                current_angle_rad = joint_state[0]
-                current_angle_deg = math.degrees(current_angle_rad)
-
-                if abs(current_angle_deg - axis_angle_degrees) < 0.15:
-                    desired_angle_reached = True
-                    break
+        joint_poses = p.calculateInverseKinematics(
+                    arm_id,
+                    arm_end_effector_index,
+                    target_position,
+                    lowerLimits=lower_limits,
+                    upperLimits=upper_limits,
+                    jointRanges=joint_ranges,
+                    restPoses=rest_poses
+                )
+        if joint_poses:
+                    ik_message = {
+                        "type": "set_all_angles",
+                        "angles_rad": joint_poses
+                    }
+                    simulation_queue.put(ik_message)
+                    controller_queue.put(ik_message)
+        else:
+            print("Simulation: IK solution not found.")
             
-            
-            message = {
-                    "type": "confirmation",
-                    "axis_angle_degrees": axis_angle_degrees,
-                    "axis_name": axis_name,
-                    "status": "success" if desired_angle_reached else "failure"
-            }
-            
-            if desired_angle_reached:
-                print(f"Simulation: Successfully reached target angle: {axis_angle_degrees} degrees for axis {axis_name}")
-            else:
-                print(f"Simulation: Failed to reach target angle: {axis_angle_degrees} degrees for axis {axis_name}")
+        # Send the message back to the controller
+        controller_queue.put(message)
 
-            # Send the message back to the controller
-            controller_queue.put(message)
-
-            p.stepSimulation()
-            time.sleep(time_step)
+        p.stepSimulation()
+        time.sleep(time_step)
