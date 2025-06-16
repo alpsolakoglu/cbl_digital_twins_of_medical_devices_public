@@ -193,7 +193,7 @@ namespace DT
             return;
         }
 
-        if (angleReachedWithinDelta(m_commandAngle, Angle::fromDegrees(1.0)))
+        if (angleReachedWithinDelta(m_commandAngle, Angle::fromDegrees(0.1)))
         {
             m_motorRotary.stop(); // Stop the motor if the command angle is reached within the delta
             Serial.println("Command angle reached: " + String(m_commandAngle.getInDegrees()) + " degrees");

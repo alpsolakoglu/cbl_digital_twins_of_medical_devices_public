@@ -19,31 +19,27 @@ void setup()
     axisC.start();
     axisR.start();
 
-    // axisA.addAngleToQueue(DT::Angle::fromDegrees(-90.0));
-    // axisA.addAngleToQueue(DT::Angle::fromDegrees(90.0));
-    // axisA.addAngleToQueue(DT::Angle::fromDegrees(-45.0));
-    // axisA.addAngleToQueue(DT::Angle::fromDegrees(45.0));
-    // axisA.addAngleToQueue(DT::Angle::fromDegrees(-22.5));
-    // axisA.addAngleToQueue(DT::Angle::fromDegrees(22.5));
+    axisA.addAngleToQueue(DT::Angle::fromDegrees(-90.0));
+    axisA.addAngleToQueue(DT::Angle::fromDegrees(90.0));
+    axisA.addAngleToQueue(DT::Angle::fromDegrees(-45.0));
+    axisA.addAngleToQueue(DT::Angle::fromDegrees(45.0));
+    axisA.addAngleToQueue(DT::Angle::fromDegrees(-22.5));
+    axisA.addAngleToQueue(DT::Angle::fromDegrees(22.5));
 
-    // axisB.addAngleToQueue(DT::Angle::fromDegrees(0));
-    // axisB.addAngleToQueue(DT::Angle::fromDegrees(90.0));
-    // axisB.addAngleToQueue(DT::Angle::fromDegrees(0));
-    // axisB.addAngleToQueue(DT::Angle::fromDegrees(90));
-    // axisB.addAngleToQueue(DT::Angle::fromDegrees(0));
-    // axisB.addAngleToQueue(DT::Angle::fromDegrees(90));
+    axisB.addAngleToQueue(DT::Angle::fromDegrees(0));
+    axisB.addAngleToQueue(DT::Angle::fromDegrees(90.0));
+    axisB.addAngleToQueue(DT::Angle::fromDegrees(0));
+    axisB.addAngleToQueue(DT::Angle::fromDegrees(90));
+    axisB.addAngleToQueue(DT::Angle::fromDegrees(0));
+    axisB.addAngleToQueue(DT::Angle::fromDegrees(90));
 
-    // axisC.addAngleToQueue(DT::Angle::fromDegrees(0));
-    // axisC.addAngleToQueue(DT::Angle::fromDegrees(35));
-    // axisC.addAngleToQueue(DT::Angle::fromDegrees(0));
-    // axisC.addAngleToQueue(DT::Angle::fromDegrees(35));
-    // axisC.addAngleToQueue(DT::Angle::fromDegrees(0));
-    // axisC.addAngleToQueue(DT::Angle::fromDegrees(35));
+    axisC.addAngleToQueue(DT::Angle::fromDegrees(0));
+    axisC.addAngleToQueue(DT::Angle::fromDegrees(35));
+    axisC.addAngleToQueue(DT::Angle::fromDegrees(0));
+    axisC.addAngleToQueue(DT::Angle::fromDegrees(35));
+    axisC.addAngleToQueue(DT::Angle::fromDegrees(0));
+    axisC.addAngleToQueue(DT::Angle::fromDegrees(35));
 
-    axisR.addAngleToQueue(DT::Angle::fromDegrees(-45.0));
-    axisR.addAngleToQueue(DT::Angle::fromDegrees(45.0));
-    axisR.addAngleToQueue(DT::Angle::fromDegrees(-45.0));
-    axisR.addAngleToQueue(DT::Angle::fromDegrees(45.0));
     axisR.addAngleToQueue(DT::Angle::fromDegrees(-45.0));
     axisR.addAngleToQueue(DT::Angle::fromDegrees(45.0));
     axisR.addAngleToQueue(DT::Angle::fromDegrees(-45.0));
