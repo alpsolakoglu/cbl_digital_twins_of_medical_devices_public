@@ -19,12 +19,12 @@ p.loadURDF("plane.urdf")
 # Load the robot arm
 arm_start_pos = [0, 0, 0]
 arm_start_orientation = p.getQuaternionFromEuler([0, 0, 0])
-arm_id = p.loadURDF("/src/urdf/onshape.urdf", arm_start_pos, arm_start_orientation, useFixedBase=True)
+arm_id = p.loadURDF("/src/urdf/4dof.urdf", arm_start_pos, arm_start_orientation, useFixedBase=True)
 
 # Add user sliders
 r_axis_slider = p.addUserDebugParameter(" R-Axis Angle (deg)", 0, 360, 0)
 a_axis_slider = p.addUserDebugParameter(" A-Axis Angle (deg)", -90, 180, 0)
-b_axis_slider = p.addUserDebugParameter(" B-Axis Angle (deg)", -90, 160, 0)
+b_axis_slider = p.addUserDebugParameter(" B-Axis Angle (deg)", -90, 90, 0)
 c_axis_slider = p.addUserDebugParameter(" C-Axis Angle (deg)", -90, 90, 0)
 
 # Joint indices

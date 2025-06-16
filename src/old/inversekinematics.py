@@ -102,5 +102,5 @@ while p.isConnected():
                     print("IK solution not found for the target position.")
                 target_position = None
 
-p.stepSimulation()
-time.sleep(time_step)
+    p.stepSimulation()
+    time.sleep(time_step)
