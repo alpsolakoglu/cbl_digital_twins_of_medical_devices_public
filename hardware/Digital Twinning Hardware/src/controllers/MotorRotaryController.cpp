@@ -189,6 +189,7 @@ namespace DT
         if (millis() - m_commandStartTime >= m_commandTimeoutMs)
         {
             Serial.println("Command timeout reached for MotorRotaryController.");
+            m_motorRotary.stop(); // Stop the motor if command timeout occurs
             m_state = ControllerState::AWAITING_COMMAND; // Change state to ERROR if command timeout occurs
             return;
         }
