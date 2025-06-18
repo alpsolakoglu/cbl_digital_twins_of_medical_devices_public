@@ -1,0 +1,146 @@
+<robot name="4dof">
+	<material name="white">
+		<color rgba="1 1 1 1"/>
+	</material>
+	<material name="red">
+		<color rgba="1 0 0 1"/>
+	</material>
+	<material name="yellow">
+		<color rgba="1 1 0 1"/>
+	</material>
+	<material name="orange">
+		<color rgba="1 0.647 0 1"/>
+	</material>
+	<material name="green">
+		<color rgba="0 1 0 1"/>
+	</material>
+	<material name="blue">
+		<color rgba="0 0 1 1"/>
+	</material>
+	<material name="black">
+		<color rgba="0 0 0 1"/>
+	</material>
+
+    <link name="world"/>
+    <link name="base">
+		<visual>
+			<geometry>
+				 <mesh filename="meshes/visual/Bolean Base.stl" scale="0.006 0.006 0.006"/>
+			</geometry>
+			<material name="red"/>
+			<origin xyz="0 0 0.025" rpy="0 0 0"/> 
+		</visual>
+		<collision>
+			<geometry>
+				<mesh filename="meshes/collision/Bolean Base collision.stl" scale="0.006 0.006 0.006"/>
+			</geometry>
+			<origin xyz="0 0 0.025" rpy="0 0 0"/> 
+		</collision>
+		<!-- Check intertial values-->
+		<inertial>
+			<mass value="1.0"/>
+			<origin xyz="0 0 1" rpy="0 0 0" />
+			<inertia ixx="0.0027" iyy="0.0027" izz="0.005" ixy="0" ixz="0" iyz="0"/>
+		</inertial>	
+	</link>
+
+    <joint name="r_axis" type="revolute">
+		<parent link="world"/>
+		<child link="base"/>
+		<origin xyz="0 0 0"	rpy="0 0 0"/>
+		<axis xyz="0 0 1"/>
+		<limit lower="-3.1415926536" upper="3.1415926536" effort="0" velocity="0.174533"/>
+	</joint>
+
+	<link name="arm_section_1">
+		<visual>
+			<geometry>
+				<mesh filename="meshes/visual/Bolean ARM4.stl" scale="0.006 0.006 0.006"/>
+			</geometry>
+			<material name="orange"/>
+			<origin xyz="0 0 -0.12" rpy="0 0 0" /> 
+		</visual>
+		<collision>
+			<geometry>
+				<mesh filename="meshes/collision/Bolean ARM4 collision.stl" scale="0.006 0.006 0.006"/>
+			</geometry>
+			<origin xyz="0 0 -0.12" rpy="0 0 0"/> 
+		</collision>
+		<!-- Check intertial values-->
+		<inertial>
+			<mass value="1.0"/>
+			<origin xyz="0 0 1" rpy="0 0 0" />
+			<inertia ixx="0.0027" iyy="0.0027" izz="0.005" ixy="0" ixz="0" iyz="0"/>
+		</inertial>
+	</link>
+
+    <joint name="base_to_arm_section_1" type="fixed">
+		<parent link="base"/>
+		<child link="arm_section_1"/>
+		<origin xyz="0 0 0.05"	rpy="0 0 0"/>
+	</joint>
+
+    <link name="arm_section_2">
+		<visual>
+			<geometry>
+				<mesh filename="meshes/visual/Bolean ARM2.stl" scale="0.006 0.006 0.006"/>
+			</geometry>
+            <material name="yellow"/>
+			<origin xyz="0 0 0" rpy="0 0 0"/> 
+		</visual>
+		<collision>
+			<geometry>
+				<mesh filename="meshes/collision/Bolean ARM2 collision.stl" scale="0.006 0.006 0.006"/>
+			</geometry>
+			<origin xyz="0 0 0" rpy="0 0 0"/> 
+		</collision>
+		<!-- Check intertial values-->
+		<inertial>
+			<mass value="1.0"/>
+			<origin rpy="0 0 0" xyz="0 0 1"/>
+			<inertia ixx="0.0027" iyy="0.0027" izz="0.005" ixy="0" ixz="0" iyz="0"/>
+		</inertial>
+	</link>
+
+    <joint name="c_axis" type="revolute">
+		<parent link="arm_section_1"/>
+		<child link="arm_section_2"/>
+		<origin xyz="0 0 0.25" rpy="0 0 0"/>
+		<axis xyz="0 1 0"/>
+		<limit lower="-1.047" upper="1.39626" effort="0" velocity="0.174533"/>
+	</joint>
+
+    <link name="arm_section_3">
+		<visual>
+			<geometry>
+				<mesh filename="meshes/visual/Bolean ARM3.stl" scale="0.006 0.006 0.006"/>
+			</geometry>
+			<material name="green"/>
+			<origin xyz="0 0 0" rpy="0 0 0"/> 
+		</visual>
+		<collision>
+			<geometry>
+				<mesh filename="meshes/collision/Bolean ARM3 collision.stl" scale="0.006 0.006 0.006"/>
+			</geometry>
+			<origin xyz="0 0 0" rpy="0 0 0"/> 
+		</collision>
+		<!-- Check intertial values-->
+		<inertial>
+			<mass value="1.0"/>
+			<origin rpy="0 0 0" xyz="0 0 1"/>
+			<inertia ixx="0.0027" iyy="0.0027" izz="0.005" ixy="0" ixz="0" iyz="0"/>
+		</inertial>
+	</link>
+
+    <joint name="b_axis" type="revolute">
+		<parent link="arm_section_2"/>
+		<child link="arm_section_3"/>
+		<origin xyz="0 0 0.8" rpy="0 0 0"/>
+		<axis xyz="0 1 0"/>
+		<limit lower="0" upper="2.79253" effort="0" velocity="0.174533"/>
+	</joint>
+
+
+
+
+</robot>
