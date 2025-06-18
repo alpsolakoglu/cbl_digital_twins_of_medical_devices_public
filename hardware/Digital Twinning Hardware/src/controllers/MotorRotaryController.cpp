@@ -189,11 +189,12 @@ namespace DT
         if (millis() - m_commandStartTime >= m_commandTimeoutMs)
         {
             Serial.println("Command timeout reached for MotorRotaryController.");
+            m_motorRotary.stop(); // Stop the motor if command timeout occurs
             m_state = ControllerState::AWAITING_COMMAND; // Change state to ERROR if command timeout occurs
             return;
         }
 
-        if (angleReachedWithinDelta(m_commandAngle, Angle::fromDegrees(1.0)))
+        if (angleReachedWithinDelta(m_commandAngle, Angle::fromDegrees(0.1)))
         {
             m_motorRotary.stop(); // Stop the motor if the command angle is reached within the delta
             Serial.println("Command angle reached: " + String(m_commandAngle.getInDegrees()) + " degrees");
