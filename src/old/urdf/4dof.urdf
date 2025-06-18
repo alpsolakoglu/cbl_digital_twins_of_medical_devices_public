@@ -49,7 +49,7 @@
 		<child link="base"/>
 		<origin xyz="0 0 0"	rpy="0 0 0"/>
 		<axis xyz="0 0 1"/>
-		<limit lower="0" upper="6.28318530718" effort="0" velocity="0.174533"/>
+		<limit lower="-3.1415926536" upper="3.1415926536" effort="0" velocity="0.174533"/>
 	</joint>
 
 	<link name="arm_section_1">
@@ -77,20 +77,20 @@
     <joint name="base_to_arm_section_1" type="fixed">
 		<parent link="base"/>
 		<child link="arm_section_1"/>
-		<origin xyz="0 0 0.05"	rpy="0 0 0"/>
+		<origin xyz="0 0 0.05"	rpy="-0.5 0 0"/>
 	</joint>
 
 	<link name="arm_section_2">
 		<visual>
 			<geometry>
-				<mesh filename="meshes/visual/A_section.stl" scale="0.003 0.003 0.003"/>
+				<cylinder length="0.35" radius="0.05"/>
 			</geometry>
 			<material name="yellow"/>
 			<origin xyz="0 0 0.175" rpy="0 0 0"/> 
 		</visual>
 		<collision>
 			<geometry>
-				<mesh filename="meshes/collision/A_section.stl" scale="0.003 0.003 0.003"/>
+				<cylinder length="0.5" radius="0.05"/>
 			</geometry>
 			<origin xyz="0 0 0.175" rpy="0 0 0"/> 
 		</collision>
@@ -107,20 +107,20 @@
 		<child link="arm_section_2"/>
 		<origin xyz="0 0 0.125" rpy="0 0 0"/>
 		<axis xyz="1 0 0"/>
-		<limit lower="-1.57079632679" upper="1.57079632679" effort="0" velocity="0.174533"/>
+		<limit lower="-1.047" upper="1.39626" effort="0" velocity="0.174533"/>
 	</joint>
 
 	<link name="arm_section_3">
 		<visual>
 			<geometry>
-				<mesh filename="meshes/visual/B_section.stl" scale="0.003 0.003 0.003"/>
+				<cylinder length="0.5" radius="0.05"/>
 			</geometry>
 			<material name="green"/>
 			<origin xyz="0 0 0.25" rpy="0 0 0"/> 
 		</visual>
 		<collision>
 			<geometry>
-				<mesh filename="meshes/collision/B_section.stl" scale="0.003 0.003 0.003"/>
+				<cylinder length="0.5" radius="0.05"/>
 			</geometry>
 			<origin xyz="0 0 0.25" rpy="0 0 0"/> 
 		</collision>
@@ -137,20 +137,20 @@
 		<child link="arm_section_3"/>
 		<origin xyz="0 0 0.35" rpy="0 0 0"/>
 		<axis xyz="1 0 0"/>
-		<limit lower="0" upper="2.8" effort="0" velocity="0.174533"/>
+		<limit lower="0" upper="2.79253" effort="0" velocity="0.174533"/>
 	</joint>
 
 	<link name="arm_section_4">
 		<visual>
 			<geometry>
-				<mesh filename="meshes/visual/C_axis.stl" scale="0.003 0.003 0.003"/>
+				<cylinder length="0.25" radius="0.05"/>
 			</geometry>
 			<material name="blue"/>
 			<origin xyz="0 0 0.125" rpy="0 0 0"/> 
 		</visual>
 		<collision>
 			<geometry>
-				<mesh filename="meshes/collision/C_axis.stl" scale="0.003 0.003 0.003"/>
+				<cylinder length="0.25" radius="0.05"/>
 			</geometry>
 			<origin xyz="0 0 0.125" rpy="0 0 0"/> 
 		</collision>
@@ -167,7 +167,7 @@
 		<child link="arm_section_4"/>
 		<origin xyz="0 0 0.5" rpy="0 0 0"/>
 		<axis xyz="1 0 0"/>
-		<limit lower="0" upper="2.8" effort="0" velocity="0.174533"/>
+		<limit lower="-1.570796" upper="1.570796" effort="0" velocity="0.174533"/>
 	</joint>
 
 
