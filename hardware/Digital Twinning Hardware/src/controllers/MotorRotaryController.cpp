@@ -70,12 +70,12 @@ namespace DT
     void MotorRotaryController::update()
     {
         // Temporary safety measure
-        if (m_state == ControllerState::AWAITING_COMMAND || m_state == ControllerState::EXECUTING_COMMAND)
+        if (m_state == ControllerState::AWAITING_COMMAND || m_state == ControllerState::EXECUTING_COMMAND || m_state == ControllerState::HOLD_CONTROLLER_INPUT)
         {
             // Check if the motor has exceeded the testing limits
             Angle currentAngle = m_motorRotary.getAngle();
             double currentAngleDegrees = currentAngle.getInDegrees();
-            if (60.0 < currentAngleDegrees && currentAngleDegrees < 300.0)
+            if (70.0 < currentAngleDegrees && currentAngleDegrees < 290.0)
             {
                 Serial.println("Motor exceeded testing limits, stopping motor and entering error state.");
                 Serial.println("Current angle: " + String(currentAngleDegrees) + " degrees. Must be between 0 and 60 degrees or between 300 and 360 degrees.");
@@ -116,6 +116,7 @@ namespace DT
         }
         case ControllerState::HOLD_CONTROLLER_INPUT:
         {
+            Serial.println("MotorRotaryController is in HOLD_CONTROLLER_INPUT state.");
             onHoldControllerInput();
             break;
         }
@@ -160,7 +161,8 @@ namespace DT
             Serial.println("MotorRotaryController configuration complete, moving to AWAITING_COMMAND state.");
 
             m_awaitingCommandStartTime = millis();       // Record the start time for the awaiting command state
-            m_state = ControllerState::AWAITING_COMMAND; // Change state to AWAITING_COMMAND after configuration
+            // m_state = ControllerState::AWAITING_COMMAND; // Change state to AWAITING_COMMAND after configuration
+            m_state = ControllerState::HOLD_CONTROLLER_INPUT; // Change state to HOLD_CONTROLLER_INPUT after configuration
         }
     }
 
@@ -244,6 +246,7 @@ namespace DT
     void MotorRotaryController::onHoldControllerInput()
     {
         // Keep the motor at the command angle
+        Serial.println("onHoldControllerInput: Keeping motor at command angle: " + String(m_controllerInputAngle.getInDegrees()) + " degrees");
         setMotorToMoveTowardsAngle(m_controllerInputAngle);
         return;
     }
@@ -260,11 +263,11 @@ namespace DT
         bool commandAngleClockwiseFromCurrentAngle;
 
         bool currentAngleInRightHalf = 0 <= currentAngle.getInDegrees() && currentAngle.getInDegrees() < 180;
-        bool commandAngleInRightHalf = 0 <= m_commandAngle.getInDegrees() && m_commandAngle.getInDegrees() < 180;
+        bool commandAngleInRightHalf = 0 <= desiredAngle.getInDegrees() && desiredAngle.getInDegrees() < 180;
 
         if ((currentAngleInRightHalf && commandAngleInRightHalf) || (!currentAngleInRightHalf && !commandAngleInRightHalf))
         {
-            commandAngleClockwiseFromCurrentAngle = m_commandAngle.getInDegrees() > currentAngle.getInDegrees();
+            commandAngleClockwiseFromCurrentAngle = desiredAngle.getInDegrees() > currentAngle.getInDegrees();
         }
         else
         {
@@ -272,10 +275,14 @@ namespace DT
         }
 
         double minSpeed = 0.05;
-        Angle delta = Angle::delta(currentAngle, m_commandAngle);
+        Angle delta = Angle::delta(currentAngle, desiredAngle);
         double deltaDegrees = delta.getInDegrees();
+        // Serial.println("Delta angle: " + String(deltaDegrees) + " degrees");
         double speedModifier = deltaDegrees > 90.0 ? 1.0 : deltaDegrees / 90.0;
+        // Serial.println("Speed modifier: " + String(speedModifier));
         // Serial.println("Current angle R: " + String(currentAngle.getInDegrees()) + " degrees");
+
+        Serial.println("Drive Val:" + String(minSpeed + speedModifier * (1.0 - minSpeed)));
 
         m_motorRotary.drive(minSpeed + speedModifier * (1.0 - minSpeed), commandAngleClockwiseFromCurrentAngle); // Move the motor to the command angle
     }

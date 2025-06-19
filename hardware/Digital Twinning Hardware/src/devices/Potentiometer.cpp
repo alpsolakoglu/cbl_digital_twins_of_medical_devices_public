@@ -36,7 +36,7 @@ namespace DT
     {
         uint16_t valueADC = analogRead(m_pin);
 
-        Serial.println("ADC value read from pin " + String(m_pin) + ": " + String(valueADC));
+        // Serial.println("ADC value read from pin " + String(m_pin) + ": " + String(valueADC));
 
         if (valueADC < m_minADC)
         {
@@ -55,7 +55,7 @@ namespace DT
 
         double ratio = (double) (valueADC - m_minADC) / (double) (m_maxADC - m_minADC);
 
-        Serial.println("Calculated ratio: " + String(ratio));
+        // Serial.println("Calculated ratio: " + String(ratio));
 
         if (ratio < 0.0 || ratio > 1.0)
         {
@@ -67,9 +67,9 @@ namespace DT
             ratio = 1.0 - ratio; // Invert the ratio if m_invertVirtual is true
         }
 
-        Serial.println("Adjusted ratio after inversion: " + String(ratio));
+        // Serial.println("Adjusted ratio after inversion: " + String(ratio));
         // Calculate the virtual value based on the ratio
-        Serial.println("Calculated virtual value: " + String(m_minVirtual + ratio * (m_maxVirtual - m_minVirtual)));
+        // Serial.println("Calculated virtual value: " + String(m_minVirtual + ratio * (m_maxVirtual - m_minVirtual)));
 
         return m_minVirtual + ratio * (m_maxVirtual - m_minVirtual);
     }

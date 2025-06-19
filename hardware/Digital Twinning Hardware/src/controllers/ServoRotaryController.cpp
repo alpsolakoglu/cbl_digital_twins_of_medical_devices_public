@@ -218,11 +218,11 @@ namespace DT
 
     void ServoRotaryController::setHoldControllerInputAngle(Angle angle)
     {
-        if (Angle::isWithinDelta(angle, m_controllerInputAngle, Angle::fromDegrees(5.0)))
-        {
-            Serial.println("Controller input angle is within delta, no change needed.");
-            return; // No change needed if the angle is within a small delta
-        }
+        // if (Angle::isWithinDelta(angle, m_controllerInputAngle, Angle::fromDegrees(5.0)))
+        // {
+        //     // Serial.println("Controller input angle is within delta, no change needed.");
+        //     return; // No change needed if the angle is within a small delta
+        // }
 
         m_controllerInputAngle = angle; // Set the angle for the controller input mode
     }
