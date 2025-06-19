@@ -27,6 +27,11 @@ namespace DT
         return m_zeroADC;
     }
 
+    uint16_t Potentiometer::getCurrentADC() 
+    {
+        return analogRead(m_pin);
+    }
+
     double Potentiometer::getCurrentVirtual() const
     {
         uint16_t valueADC = analogRead(m_pin);

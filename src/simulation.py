@@ -17,6 +17,17 @@ def start(controller_queue, simulation_queue):
     # Load the floor
     p.loadURDF("plane.urdf")
 
+    gallbladder_position = [-1.1, -0.2, 0] # Position it where you want
+    gallbladder_orientation = p.getQuaternionFromEuler([0, 0, 1.5])
+
+    gallbladder_id = p.loadURDF(
+        "src/urdf/gallbladder.urdf",
+        basePosition=gallbladder_position,
+        baseOrientation=gallbladder_orientation,
+        useFixedBase=True # Makes the object static
+    )
+
+
     # Load the robot arm
     arm_start_pos = [0, 0, 0]
     arm_start_orientation = p.getQuaternionFromEuler([0, 0, 0])
@@ -63,6 +74,20 @@ def start(controller_queue, simulation_queue):
                     p.POSITION_CONTROL, 
                     targetPosition=angle_degrees * math.pi / 180.0  # Convert degrees to radians
                 )
+
+        # Check if height of last effector index is below a threshold
+        # linkState = p.getLinkState(arm_id, A_AXIS_JOINT_IDX)
+        # framePos = linkState[4]
+        # frameOrientation = linkState[5]
+                                     
+        # roll, pitch, yaw = p.getEulerFromQuaternion(frameOrientation)
+
+
+
+        # print(f"framePos:")
+        # print(framePos)
+        # print(f"frameOreinetation: ")
+        # print(frameOrientation)
 
         p.stepSimulation()
         time.sleep(time_step)

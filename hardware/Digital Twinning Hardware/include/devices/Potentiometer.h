@@ -36,6 +36,8 @@ namespace DT
         double getMaxVirtual() const;
         double getZeroVirtual() const;
 
+        uint16_t getCurrentADC();
+
         uint16_t setZeroADC(uint16_t zeroADC);
     };
 }

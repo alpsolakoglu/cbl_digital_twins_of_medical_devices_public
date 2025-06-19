@@ -39,7 +39,7 @@ a_axis_slider = p.addUserDebugParameter(" A-Axis Angle (deg)", -90, 90, 0)
 
 # Joint indices
 # Fixed joint index (not used in control)
-FIXED_JOINT_IDX = 1
+FIXED_JOINT_IDX = 0
 
 R_AXIS_JOINT_IDX = 1
 C_AXIS_JOINT_IDX = 2
