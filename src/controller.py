@@ -1,20 +1,58 @@
 import serial
 import json
 import math
+import re
+import time
+
+def parse_robot_angle(data):
+    """
+    Parse individual RobotAngle strings like 'RobotAngleA:45.67'
+    Returns tuple of (axis_name, angle_degrees) or None if parsing fails
+    """
+    # Use regex to match the pattern RobotAngle[Letter]:[Number]
+    match = re.match(r'RobotAngle([RABC]):(-?\d+\.?\d*)', data)
+    if match:
+        axis_name = match.group(1)
+        angle_degrees = float(match.group(2))
+        return axis_name, angle_degrees
+    return None
 
 
 axis_names_ordered = ["R", "A", "B", "C"]  # Ordered list of axis names
-def start(controller_queue, inverse_kinematics_queue, port, baudrate, timeout):
+def start(controller_queue, simulation_queue, port, baudrate, timeout):
     try:
         # Open the serial port
-        ser = serial.Serial(port, baudrate, timeout=timeout)
+        while True:
+            time.sleep(3)
+            try:
+                print(f"Attempting to connect to {port} at {baudrate} baud...")
+                ser = serial.Serial(port, baudrate, timeout=timeout)
+                break
+            except serial.SerialException as e:
+                print(f"Failed to connect to {port} at {baudrate} baud: {e}")
+                continue
+
         print(f"Connected to {port} at {baudrate} baud.")
 
         # Read data from the serial port
         while True:
-            # if ser.in_waiting > 0:
-            #      data = ser.readline().decode('utf-8').strip()
-            #      print(f"Received: {data}")
+            if ser.in_waiting > 0:
+                data = ser.readline().decode('utf-8').strip()
+
+                # Try to parse as individual robot angle
+                if data.startswith("RobotAngle"):
+                    parsed = parse_robot_angle(data)
+                    if parsed:
+                        axis_name, angle_degrees = parsed
+                        
+                        simulation_queue.put({
+                            "type": "twin_axis_angle",
+                            "axis_angle_degrees": angle_degrees,
+                            "axis_name": axis_name
+                        })
+                    else:
+                        print(f"Failed to parse robot angle data: {data}")
+
             if not controller_queue.empty():
                 message = controller_queue.get()
                 print(f"Controller: Received Queue Message: {message}")

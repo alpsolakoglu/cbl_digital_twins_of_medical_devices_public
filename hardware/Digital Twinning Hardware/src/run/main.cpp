@@ -84,10 +84,10 @@ void loop()
     axisB.setHoldControllerInputAngle(DT::Angle::fromDegrees(frontBack.getCurrentVirtual()));
     axisC.setHoldControllerInputAngle(DT::Angle::fromDegrees(sideScroll.getCurrentVirtual()));
     
-    Serial.println("A" + String(axisA.getCurrentAngle().getInDegrees()));
-    Serial.println("B" + String(axisB.getCurrentAngle().getInDegrees()));
-    Serial.println("C" + String(axisC.getCurrentAngle().getInDegrees()));
-    Serial.println("R" + String(axisR.getCurrentAngle().getInDegrees()));
+    Serial.println("RobotAngleA:" + String(axisA.getCurrentAngle().getInDegrees()));
+    Serial.println("RobotAngleB:" + String(axisB.getCurrentAngle().getInDegrees()));
+    Serial.println("RobotAngleC:" + String(axisC.getCurrentAngle().getInDegrees()));
+    Serial.println("RobotAngleR:" + String(axisR.getCurrentAngle().getInDegrees()));
 
     // parseCommandFromSerial();
 
