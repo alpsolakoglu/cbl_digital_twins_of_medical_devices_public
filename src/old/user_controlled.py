@@ -32,7 +32,7 @@ gallbladder_id = p.loadURDF(
 )
 
 # Add user sliders
-r_axis_slider = p.addUserDebugParameter(" R-Axis Angle (deg)", -90, 90, 0)
+r_axis_slider = p.addUserDebugParameter(" R-Axis Angle (deg)", -60, 60, 0)
 c_axis_slider = p.addUserDebugParameter(" C-Axis Angle (deg)", -60, 80, 0)
 b_axis_slider = p.addUserDebugParameter(" B-Axis Angle (deg)", 0, 160, 0)
 a_axis_slider = p.addUserDebugParameter(" A-Axis Angle (deg)", -90, 90, 0)

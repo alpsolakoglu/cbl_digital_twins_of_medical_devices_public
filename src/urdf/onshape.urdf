@@ -76,7 +76,7 @@
 		<parent link="base"/>
 		<child link="arm_section_1"/>
 		<origin xyz="0 0 0.15"	rpy="0 0 0"/>
-        <axis xyz="0 0 1"/>
+        <axis xyz="0 0 -1"/>
 		<limit lower="-1.047" upper="1.047" effort="0" velocity="0.174533"/>
 	</joint>
 
@@ -106,7 +106,7 @@
 		<parent link="arm_section_1"/>
 		<child link="arm_section_2"/>
 		<origin xyz="0 0 0.25" rpy="0 0 0"/>
-		<axis xyz="0 1 0"/>
+		<axis xyz="0 -1 0"/>
 		<limit lower="-1.047" upper="1.39626" effort="0" velocity="0.174533"/>
 	</joint>
 
@@ -166,7 +166,7 @@
 		<parent link="arm_section_3"/>
 		<child link="arm_section_4"/>
 		<origin xyz="0 0.215 0.88" rpy="0 0 0"/>
-		<axis xyz="0 1 0"/>
+		<axis xyz="0 -1 0"/>
 		<limit lower="-1.570796" upper="1.570796" effort="0" velocity="0.174533"/>
 	</joint>
 
