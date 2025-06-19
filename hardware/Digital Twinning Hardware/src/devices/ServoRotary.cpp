@@ -96,7 +96,7 @@ namespace DT
         // }
 
         // Serial.println("Timeout waiting for rotary encoder to match angle: " + String(desiredAngle.getInDegrees()) + " degrees");
-        Serial.println("ServoRotary " + String(m_axisName.c_str()) + " set to absolute angle: " + String(angleWithServoOffset.getInDegrees()) + " degrees");
+        // Serial.println("ServoRotary " + String(m_axisName.c_str()) + " set to absolute angle: " + String(angleWithServoOffset.getInDegrees()) + " degrees");
         return true; // Timeout reached without matching angle
     }
 

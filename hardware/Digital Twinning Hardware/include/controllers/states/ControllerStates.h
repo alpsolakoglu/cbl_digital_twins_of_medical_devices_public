@@ -9,6 +9,7 @@ namespace DT
         CONFIGURE,
         AWAITING_COMMAND,
         EXECUTING_COMMAND,
+        HOLD_CONTROLLER_INPUT,
         ERROR
     };
 }

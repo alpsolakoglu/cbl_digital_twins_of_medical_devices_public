@@ -23,6 +23,8 @@ namespace DT
         Angle m_initialAngle;
         Angle m_commandAngle; // The angle to be set for the servo
 
+        Angle m_controllerInputAngle; // The angle for the controller input mode
+
         uint16_t m_configureWaitTimeMs;    // Wait time for configuration in seconds
         uint16_t m_commandTimeoutMs;       // Timeout duration for the controller
         uint16_t m_awaitingCommandDelayMs; // Delay before awaiting command in seconds
@@ -38,6 +40,7 @@ namespace DT
         void onConfigure();
         void onAwaitingCommand();
         void onExecutingCommand();
+        void onHoldControllerInput();
         void onError();
 
     public:
@@ -58,6 +61,12 @@ namespace DT
         void update();
 
         void addAngleToQueue(Angle angle);
+
+        void setHoldControllerInputAngle(Angle angle);
+
+        Angle getCurrentAngle();
+
+        ControllerState getState() const;
     };
 
 }

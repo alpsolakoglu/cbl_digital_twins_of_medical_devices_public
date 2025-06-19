@@ -26,7 +26,8 @@ namespace DT
           m_awaitingCommandDelayMs(awaitingCommandDelayMs),
           m_commandAngle(Angle::fromDegrees(0.0)),
           m_axisName(axisName),
-          m_initialAngle(initialAngle) {};
+          m_initialAngle(initialAngle),
+          m_controllerInputAngle(Angle::fromDegrees(0.0)) {};
 
     bool MotorRotaryController::start()
     {
@@ -60,7 +61,8 @@ namespace DT
             return false; // Failed to set the rotary encoder zero
         }
 
-        m_state = ControllerState::AWAITING_COMMAND; // Change state to AWAITING_COMMAND after configuration
+        m_state = ControllerState::HOLD_CONTROLLER_INPUT;
+        // m_state = ControllerState::AWAITING_COMMAND; // Change state to AWAITING_COMMAND after configuration
         Serial.println("MotorRotaryController configured successfully.");
         return true; // Successfully configured the servo and rotary encoder
     }
@@ -112,6 +114,11 @@ namespace DT
             onExecutingCommand();
             break;
         }
+        case ControllerState::HOLD_CONTROLLER_INPUT:
+        {
+            onHoldControllerInput();
+            break;
+        }
         case ControllerState::ERROR:
         {
             onError();
@@ -159,11 +166,11 @@ namespace DT
 
     void MotorRotaryController::onAwaitingCommand()
     {
-        if (millis() - m_awaitingCommandStartTime < m_awaitingCommandDelayMs)
-        {
-            // Delay before awaiting command to go easy on the servos and to let the system stabilize
-            return;
-        }
+        // if (millis() - m_awaitingCommandStartTime < m_awaitingCommandDelayMs)
+        // {
+        //     // Delay before awaiting command to go easy on the servos and to let the system stabilize
+        //     return;
+        // }
 
         if (!m_angleQueue.empty())
         {
@@ -189,7 +196,7 @@ namespace DT
         if (millis() - m_commandStartTime >= m_commandTimeoutMs)
         {
             Serial.println("Command timeout reached for MotorRotaryController.");
-            m_motorRotary.stop(); // Stop the motor if command timeout occurs
+            m_motorRotary.stop();                        // Stop the motor if command timeout occurs
             m_state = ControllerState::AWAITING_COMMAND; // Change state to ERROR if command timeout occurs
             return;
         }
@@ -204,7 +211,6 @@ namespace DT
         }
 
         setMotorToMoveTowardsAngle(m_commandAngle); // Move the motor towards the command angle
-
 
         // if (0 <= currentAngle.getInDegrees() && currentAngle.getInDegrees() < 180)
         // {
@@ -233,6 +239,13 @@ namespace DT
         //         commandAngleClockwiseFromCurrentAngle = m_commandAngle.getInDegrees() > currentAngle.getInDegrees();
         //     }
         // }
+    }
+
+    void MotorRotaryController::onHoldControllerInput()
+    {
+        // Keep the motor at the command angle
+        setMotorToMoveTowardsAngle(m_controllerInputAngle);
+        return;
     }
 
     void MotorRotaryController::onError()
@@ -273,5 +286,20 @@ namespace DT
         Angle currentAngle = m_motorRotary.getAngle();
         Serial.println("Current angle: " + String(currentAngle.getInDegrees()) + " degrees, Desired angle: " + String(desiredAngle.getInDegrees()) + " degrees, Max delta: " + String(maxDelta.getInDegrees()) + " degrees");
         return Angle::isWithinDelta(currentAngle, desiredAngle, maxDelta);
+    }
+
+    void MotorRotaryController::setHoldControllerInputAngle(Angle angle)
+    {
+        m_controllerInputAngle = angle; // Set the angle for the controller input mode
+    }
+
+    Angle MotorRotaryController::getCurrentAngle()
+    {
+        return m_motorRotary.getAngle(); // Return the current angle of the motor
+    }
+
+    ControllerState MotorRotaryController::getState() const
+    {
+        return m_state; // Return the current state of the controller
     }
 }

@@ -27,7 +27,8 @@ namespace DT
           m_awaitingCommandDelayMs(awaitingCommandDelayMs),
           m_commandAngle(Angle::fromDegrees(0.0)),
           m_axisName(axisName),
-          m_initialAngle(initialAngle) {};
+          m_initialAngle(initialAngle),
+          m_controllerInputAngle(Angle::fromDegrees(0.0)) {};
 
     bool ServoRotaryController::start()
     {
@@ -96,6 +97,11 @@ namespace DT
             onExecutingCommand();
             break;
         }
+        case ControllerState::HOLD_CONTROLLER_INPUT:
+        {
+            onHoldControllerInput();
+            break;
+        }
         case ControllerState::ERROR:
         {
             onError();
@@ -140,20 +146,21 @@ namespace DT
         {
             // Set the rotary encoder to zero after the wait time
             m_servoRotary.setRotaryEncoderZero();
-            Serial.println("ServoRotaryController configuration complete, setting rotary encoder zero.");
 
             m_awaitingCommandStartTime = millis(); // Record the start time for the awaiting command state
-            m_state = ControllerState::AWAITING_COMMAND;
+            m_state = ControllerState::HOLD_CONTROLLER_INPUT;
+            // m_state = ControllerState::AWAITING_COMMAND; // Change state to AWAITING_COMMAND after configuration
+            Serial.println("ServoRotaryController configured successfully.");
         }
     }
 
     void ServoRotaryController::onAwaitingCommand()
     {
-        if (millis() - m_awaitingCommandStartTime < m_awaitingCommandDelayMs)
-        {
-            // Delay before awaiting command to go easy on the servos and to let the system stabilize
-            return;
-        }
+        // if (millis() - m_awaitingCommandStartTime < m_awaitingCommandDelayMs)
+        // {
+        //     // Delay before awaiting command to go easy on the servos and to let the system stabilize
+        //     return;
+        // }
 
         if (!m_angleQueue.empty())
         {
@@ -179,12 +186,12 @@ namespace DT
         {
             Serial.println("Command timeout reached for ServoRotaryController.");
 
-            m_awaitingCommandStartTime = millis(); // Record the start time for the awaiting command state
+            m_awaitingCommandStartTime = millis();       // Record the start time for the awaiting command state
             m_state = ControllerState::AWAITING_COMMAND; // Change state to ERROR if command timeout occurs
             return;
         }
 
-        Angle maxDelta = Angle::fromDegrees(1.0);
+        Angle maxDelta = Angle::fromDegrees(2.0);
         // Check if the servo has reached the command angle
         Angle currentAngle = m_servoRotary.getAngle();
         if (Angle::isWithinDelta(currentAngle, m_commandAngle, maxDelta))
@@ -192,10 +199,16 @@ namespace DT
             Serial.println("ServoRotary for " + String(m_axisName.c_str()) + " matched desired angle (within " + String(maxDelta.getInDegrees()) + " degrees)");
             Serial.println("Desired: " + String(m_commandAngle.getInDegrees()) + " degrees | Actual: " + String(currentAngle.getInDegrees()) + " degrees");
 
-            m_awaitingCommandStartTime = millis(); // Record the start time for the awaiting command state
+            m_awaitingCommandStartTime = millis();       // Record the start time for the awaiting command state
             m_state = ControllerState::AWAITING_COMMAND; // Change state back to AWAITING_COMMAND after executing the command
             return;
         }
+    }
+
+    void ServoRotaryController::onHoldControllerInput()
+    {
+        m_servoRotary.setAngle(m_controllerInputAngle); // Keep the servo at the command angle
+        return;
     }
 
     void ServoRotaryController::onError()
@@ -203,4 +216,24 @@ namespace DT
         return; // Handle error state, can be implemented later
     }
 
+    void ServoRotaryController::setHoldControllerInputAngle(Angle angle)
+    {
+        if (Angle::isWithinDelta(angle, m_controllerInputAngle, Angle::fromDegrees(5.0)))
+        {
+            Serial.println("Controller input angle is within delta, no change needed.");
+            return; // No change needed if the angle is within a small delta
+        }
+
+        m_controllerInputAngle = angle; // Set the angle for the controller input mode
+    }
+
+    Angle ServoRotaryController::getCurrentAngle()
+    {
+        return m_servoRotary.getAngle(); // Return the current angle of the motor
+    }
+
+    ControllerState ServoRotaryController::getState() const
+    {
+        return m_state; // Return the current state of the controller
+    }
 }
