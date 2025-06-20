@@ -12,22 +12,22 @@ namespace DT
                                                  uint16_t maxPulseWidth,
                                                  uint16_t commandTimeoutMs,
                                                  uint16_t configureWaitTimeMs,
-                                                 uint16_t awaitingCommandDelayMs)
-        : m_motorRotary(pin,
+                                                 uint16_t awaitingCommandDelayMs,
+                                                 Potentiometer *potentiometer)
+        : IController(axisName,
+                      initialAngle,
+                      configureWaitTimeMs,
+                      commandTimeoutMs,
+                      awaitingCommandDelayMs,
+                      potentiometer),
+          m_motorRotary(pin,
                         channel,
                         axisName,
                         motorPositiveClockwise,
                         rotaryEncoderPositiveClockwise,
                         initialAngle,
                         minPulseWidth,
-                        maxPulseWidth),
-          m_configureWaitTimeMs(configureWaitTimeMs),
-          m_commandTimeoutMs(commandTimeoutMs),
-          m_awaitingCommandDelayMs(awaitingCommandDelayMs),
-          m_commandAngle(Angle::fromDegrees(0.0)),
-          m_axisName(axisName),
-          m_initialAngle(initialAngle),
-          m_controllerInputAngle(Angle::fromDegrees(0.0)) {};
+                        maxPulseWidth) {};
 
     bool MotorRotaryController::start()
     {
@@ -47,96 +47,9 @@ namespace DT
         return true; // Successfully started the servo
     }
 
-    bool MotorRotaryController::configure()
+    Angle MotorRotaryController::getCurrentAngle()
     {
-        if (m_state != ControllerState::CONFIGURE)
-        {
-            Serial.println("MotorRotaryController is not in the CONFIGURATION state, can only configure in CONFIGURATION state.");
-            return false; // Cannot configure if not in the correct state
-        }
-
-        if (!m_motorRotary.setRotaryEncoderZero())
-        {
-            Serial.println("Failed to set RotaryEncoder zero.");
-            return false; // Failed to set the rotary encoder zero
-        }
-
-        m_state = ControllerState::HOLD_CONTROLLER_INPUT;
-        // m_state = ControllerState::AWAITING_COMMAND; // Change state to AWAITING_COMMAND after configuration
-        Serial.println("MotorRotaryController configured successfully.");
-        return true; // Successfully configured the servo and rotary encoder
-    }
-
-    void MotorRotaryController::update()
-    {
-        // Temporary safety measure
-        if (m_state == ControllerState::AWAITING_COMMAND || m_state == ControllerState::EXECUTING_COMMAND || m_state == ControllerState::HOLD_CONTROLLER_INPUT)
-        {
-            // Check if the motor has exceeded the testing limits
-            Angle currentAngle = m_motorRotary.getAngle();
-            double currentAngleDegrees = currentAngle.getInDegrees();
-            if (70.0 < currentAngleDegrees && currentAngleDegrees < 290.0)
-            {
-                Serial.println("Motor exceeded testing limits, stopping motor and entering error state.");
-                Serial.println("Current angle: " + String(currentAngleDegrees) + " degrees. Must be between 0 and 60 degrees or between 300 and 360 degrees.");
-                m_motorRotary.stop(); // Stop the motor if it exceeds the testing limits
-
-                m_state = ControllerState::ERROR;
-                return;
-            }
-        }
-
-        // Serial.println(m_state == ControllerState::START ? "MotorRotaryController is in START state." :
-        //                m_state == ControllerState::CONFIGURE ? "MotorRotaryController is in CONFIGURE state." :
-        //                m_state == ControllerState::AWAITING_COMMAND ? "MotorRotaryController is in AWAITING_COMMAND state." :
-        //                m_state == ControllerState::EXECUTING_COMMAND ? "MotorRotaryController is in EXECUTING_COMMAND state." :
-        //                m_state == ControllerState::ERROR ? "MotorRotaryController is in ERROR state." :
-        //                "Unknown MotorRotaryController state.");
-        switch (m_state)
-        {
-        case ControllerState::START:
-        {
-            onStart();
-            break; // No action needed in START state
-        }
-        case ControllerState::CONFIGURE:
-        {
-            onConfigure();
-            break;
-        }
-        case ControllerState::AWAITING_COMMAND:
-        {
-            onAwaitingCommand();
-            break;
-        }
-        case ControllerState::EXECUTING_COMMAND:
-        {
-            onExecutingCommand();
-            break;
-        }
-        case ControllerState::HOLD_CONTROLLER_INPUT:
-        {
-            Serial.println("MotorRotaryController is in HOLD_CONTROLLER_INPUT state.");
-            onHoldControllerInput();
-            break;
-        }
-        case ControllerState::ERROR:
-        {
-            onError();
-            break;
-        }
-        default:
-        {
-            Serial.println("Unknown MotorRotaryController state.");
-            break;
-        }
-        }
-    }
-
-    void MotorRotaryController::addAngleToQueue(Angle angle)
-    {
-        m_angleQueue.push(angle); // Add the angle to the queue
-        Serial.println("Angle added to queue: " + String(angle.getInDegrees()) + " degrees");
+        return m_motorRotary.getAngle(); // Return the current angle of the motor
     }
 
     void MotorRotaryController::onStart()
@@ -160,7 +73,7 @@ namespace DT
             // Configuration complete, change state to AWAITING_COMMAND
             Serial.println("MotorRotaryController configuration complete, moving to AWAITING_COMMAND state.");
 
-            m_awaitingCommandStartTime = millis();       // Record the start time for the awaiting command state
+            m_awaitingCommandStartTime = millis(); // Record the start time for the awaiting command state
             // m_state = ControllerState::AWAITING_COMMAND; // Change state to AWAITING_COMMAND after configuration
             m_state = ControllerState::HOLD_CONTROLLER_INPUT; // Change state to HOLD_CONTROLLER_INPUT after configuration
         }
@@ -203,7 +116,7 @@ namespace DT
             return;
         }
 
-        if (angleReachedWithinDelta(m_commandAngle, Angle::fromDegrees(0.1)))
+        if (Angle::isWithinDelta(m_motorRotary.getAngle(), m_commandAngle, Angle::fromDegrees(0.1)))
         {
             m_motorRotary.stop(); // Stop the motor if the command angle is reached within the delta
             Serial.println("Command angle reached: " + String(m_commandAngle.getInDegrees()) + " degrees");
@@ -213,34 +126,6 @@ namespace DT
         }
 
         setMotorToMoveTowardsAngle(m_commandAngle); // Move the motor towards the command angle
-
-        // if (0 <= currentAngle.getInDegrees() && currentAngle.getInDegrees() < 180)
-        // {
-        //     // Command angle on right side of start pos
-        //     if (0 <= m_commandAngle.getInDegrees() && m_commandAngle.getInDegrees() < 180)
-        //     {
-        //         commandAngleClockwiseFromCurrentAngle = m_commandAngle.getInDegrees() > currentAngle.getInDegrees();
-        //     }
-        //     // Command angle in left side of start pos
-        //     else
-        //     {
-        //         // Rotate counter-clockwise
-        //     }
-        // }
-        // // Current angle in left side of start pos
-        // else
-        // {
-        //     // Command angle in right side of start pos
-        //     if (0 <= m_commandAngle.getInDegrees() && m_commandAngle.getInDegrees() < 180)
-        //     {
-        //         // Rotate clockwise
-        //     }
-        //     // Command angle in left side of start pos
-        //     else
-        //     {
-        //         commandAngleClockwiseFromCurrentAngle = m_commandAngle.getInDegrees() > currentAngle.getInDegrees();
-        //     }
-        // }
     }
 
     void MotorRotaryController::onHoldControllerInput()
@@ -287,26 +172,20 @@ namespace DT
         m_motorRotary.drive(minSpeed + speedModifier * (1.0 - minSpeed), commandAngleClockwiseFromCurrentAngle); // Move the motor to the command angle
     }
 
-    bool MotorRotaryController::angleReachedWithinDelta(Angle desiredAngle, Angle maxDelta)
-    {
-        // Check if the motor has reached the command angle
-        Angle currentAngle = m_motorRotary.getAngle();
-        Serial.println("Current angle: " + String(currentAngle.getInDegrees()) + " degrees, Desired angle: " + String(desiredAngle.getInDegrees()) + " degrees, Max delta: " + String(maxDelta.getInDegrees()) + " degrees");
-        return Angle::isWithinDelta(currentAngle, desiredAngle, maxDelta);
-    }
+    // // Temporary safety measure
+    // if (m_state == ControllerState::AWAITING_COMMAND || m_state == ControllerState::EXECUTING_COMMAND || m_state == ControllerState::HOLD_CONTROLLER_INPUT)
+    // {
+    //     // Check if the motor has exceeded the testing limits
+    //     Angle currentAngle = m_motorRotary.getAngle();
+    //     double currentAngleDegrees = currentAngle.getInDegrees();
+    //     if (70.0 < currentAngleDegrees && currentAngleDegrees < 290.0)
+    //     {
+    //         Serial.println("Motor exceeded testing limits, stopping motor and entering error state.");
+    //         Serial.println("Current angle: " + String(currentAngleDegrees) + " degrees. Must be between 0 and 60 degrees or between 300 and 360 degrees.");
+    //         m_motorRotary.stop(); // Stop the motor if it exceeds the testing limits
 
-    void MotorRotaryController::setHoldControllerInputAngle(Angle angle)
-    {
-        m_controllerInputAngle = angle; // Set the angle for the controller input mode
-    }
-
-    Angle MotorRotaryController::getCurrentAngle()
-    {
-        return m_motorRotary.getAngle(); // Return the current angle of the motor
-    }
-
-    ControllerState MotorRotaryController::getState() const
-    {
-        return m_state; // Return the current state of the controller
-    }
+    //         m_state = ControllerState::ERROR;
+    //         return;
+    //     }
+    // }
 }

@@ -2,13 +2,15 @@
 #include "controllers/MotorRotaryController.h"
 #include "devices/Potentiometer.h"
 
+DT::Potentiometer sideScroll = DT::Potentiometer(32, 0, 2260, 1130, true, -60, 80, 0);
+DT::Potentiometer frontBack = DT::Potentiometer(33, 1650, 2270, 1960, false, 0, 160, 0);
+DT::Potentiometer twist = DT::Potentiometer(34, 0, 2250, 1125, true, -60, 60, 0);
+DT::Potentiometer backButton = DT::Potentiometer(35, 1900, 2270, 2085, true, -90, 90, 0);
+
 DT::ServoRotaryController axisA = DT::ServoRotaryController(4, 5, "A", false, false, DT::Angle::fromDegrees(90.0));
 DT::ServoRotaryController axisB = DT::ServoRotaryController(5, 4, "B", false, false, DT::Angle::fromDegrees(167.0));
 DT::ServoRotaryController axisC = DT::ServoRotaryController(16, 3, "C", true, true, DT::Angle::fromDegrees(90.0));
 DT::MotorRotaryController axisR = DT::MotorRotaryController(2, 2, "R", false, true);
-
-bool flip = true;
-int counter = 0;
 
 // void parseCommandFromSerial()
 // {
@@ -42,13 +44,6 @@ int counter = 0;
 //     }
 // }
 
-// tmp
-DT::Potentiometer sideScroll = DT::Potentiometer(32, 0, 2260, 1210, true, -60, 80, 0);
-DT::Potentiometer frontBack = DT::Potentiometer(33, 1650, 2270, 2085, false, 0, 160, 0);
-DT::Potentiometer twist = DT::Potentiometer(34, 0, 2250, 1125, true, -60, 60, 0);
-DT::Potentiometer backButton = DT::Potentiometer(35, 1900, 2270, 2085, true, -90, 90, 0);
-
-unsigned long lastPotentiometerReadTime = 0;
 
 void setup()
 {
