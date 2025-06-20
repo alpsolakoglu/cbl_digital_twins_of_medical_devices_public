@@ -21,19 +21,21 @@ namespace DT
         void onExecutingCommand();
         void onHoldControllerInput();
         void onError();
+
     public:
         MotorRotaryController(uint16_t pin,
                               uint8_t channel,
                               std::string axisName,
                               bool motorPositiveClockwise,
                               bool rotaryEncoderPositiveClockwise,
-                              Angle initialAngle = Angle::fromDegrees(90),
+                              Angle initialAngle = Angle::fromDegrees(0),
+                              Potentiometer *potentiometer = nullptr,
+                              double beta = 0.9,
                               uint16_t minPulseWidth = 500,
                               uint16_t maxPulseWidth = 2500,
                               uint16_t configureWaitTimeMs = 3000,
                               uint16_t commandTimeoutMs = 5000,
-                              uint16_t awaitingCommandDelayMs = 750,
-                              Potentiometer *potentiometer = nullptr);
+                              uint16_t awaitingCommandDelayMs = 750);
 
         bool start();
 

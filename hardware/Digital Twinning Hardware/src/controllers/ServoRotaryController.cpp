@@ -9,18 +9,20 @@ namespace DT
                                                  bool servoPositiveClockwise,
                                                  bool rotaryEncoderPositiveClockwise,
                                                  Angle initialAngle,
+                                                 Potentiometer *potentiometer,
+                                                 double beta,
                                                  uint16_t minPulseWidth,
                                                  uint16_t maxPulseWidth,
                                                  uint16_t configureWaitTimeMs,
                                                  uint16_t commandTimeoutMs,
-                                                 uint16_t awaitingCommandDelayMs,
-                                                 Potentiometer *potentiometer)
+                                                 uint16_t awaitingCommandDelayMs)
         : IController(axisName,
                       initialAngle,
                       configureWaitTimeMs,
                       commandTimeoutMs,
                       awaitingCommandDelayMs,
-                      potentiometer),
+                      potentiometer,
+                      beta),
           m_servoRotary(pin,
                         channel,
                         axisName,
@@ -69,7 +71,7 @@ namespace DT
                 return;
             }
 
-            m_configured = true;         // Mark that the servo is set to the initial angle
+            m_configured = true;             // Mark that the servo is set to the initial angle
             m_configureStartTime = millis(); // Record the time when the servo was set to the initial angle
         }
 
@@ -139,6 +141,10 @@ namespace DT
 
     void ServoRotaryController::onHoldControllerInput()
     {
+        Serial.println("RobotAngle" + String(m_axisName.c_str()) + ":" + m_servoRotary.getAngle().getInDegrees());
+
+        updateControllerInputAngle();
+        
         m_servoRotary.setAngle(m_controllerInputAngle); // Keep the servo at the command angle
         return;
     }

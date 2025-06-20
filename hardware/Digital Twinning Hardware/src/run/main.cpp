@@ -7,43 +7,10 @@ DT::Potentiometer frontBack = DT::Potentiometer(33, 1650, 2270, 1960, false, 0, 
 DT::Potentiometer twist = DT::Potentiometer(34, 0, 2250, 1125, true, -60, 60, 0);
 DT::Potentiometer backButton = DT::Potentiometer(35, 1900, 2270, 2085, true, -90, 90, 0);
 
-DT::ServoRotaryController axisA = DT::ServoRotaryController(4, 5, "A", false, false, DT::Angle::fromDegrees(90.0));
-DT::ServoRotaryController axisB = DT::ServoRotaryController(5, 4, "B", false, false, DT::Angle::fromDegrees(167.0));
-DT::ServoRotaryController axisC = DT::ServoRotaryController(16, 3, "C", true, true, DT::Angle::fromDegrees(90.0));
-DT::MotorRotaryController axisR = DT::MotorRotaryController(2, 2, "R", false, true);
-
-// void parseCommandFromSerial()
-// {
-//     if (Serial.available() > 0)
-//     {
-//         String command = Serial.readStringUntil('\n');
-//         command.trim();
-
-//         Serial.println("Received command: " + command);
-
-//         if (command.startsWith("A"))
-//         {
-//             int angle = command.substring(1).toInt();
-//             axisA.addAngleToQueue(DT::Angle::fromDegrees(angle));
-//         }
-//         else if (command.startsWith("B"))
-//         {
-//             int angle = command.substring(1).toInt();
-//             axisB.addAngleToQueue(DT::Angle::fromDegrees(angle));
-//         }
-//         else if (command.startsWith("C"))
-//         {
-//             int angle = command.substring(1).toInt();
-//             axisC.addAngleToQueue(DT::Angle::fromDegrees(angle));
-//         }
-//         else if (command.startsWith("R"))
-//         {
-//             int angle = command.substring(1).toInt();
-//             axisR.addAngleToQueue(DT::Angle::fromDegrees(angle));
-//         }
-//     }
-// }
-
+DT::ServoRotaryController axisA = DT::ServoRotaryController(4, 5, "A", false, false, DT::Angle::fromDegrees(90.0), &backButton, 0.9);
+DT::ServoRotaryController axisB = DT::ServoRotaryController(5, 4, "B", false, false, DT::Angle::fromDegrees(167.0), &frontBack, 0.93);
+DT::ServoRotaryController axisC = DT::ServoRotaryController(16, 3, "C", true, true, DT::Angle::fromDegrees(90.0), &sideScroll, 0.9);
+DT::MotorRotaryController axisR = DT::MotorRotaryController(2, 2, "R", false, true, DT::Angle::fromDegrees(0.0), &twist, 0.9);
 
 void setup()
 {
@@ -56,29 +23,12 @@ void setup()
     axisR.start();
 }
 
-// int sideScroll  = analogRead(32); // 2420 - 0 (all the way back is 2420)
-// int frontBack = analogRead(33); // 1750 - 2420 (all the way back is 1750)
-// // int c = analogRead(34);
-// int backButton = analogRead(35); // 2420 - 2030 (not pressed is 2420, pressed is 2030)
-
-// Serial.println("Analog reading: sideScroll: " + String(sideScroll.getCurrentVirtual()));
-// Serial.println("Analog reading: frontBack: " + String(frontBack.getCurrentVirtual()));
-// // Serial.println("Analog reading: C: " + String(c));
-// Serial.println("Analog reading: backButton: " + String(backButton.getCurrentVirtual()));
-
 void loop()
 {
-    axisA.setHoldControllerInputAngle(DT::Angle::fromDegrees(backButton.getCurrentVirtual()));
-    axisB.setHoldControllerInputAngle(DT::Angle::fromDegrees(frontBack.getCurrentVirtual()));
-    axisC.setHoldControllerInputAngle(DT::Angle::fromDegrees(sideScroll.getCurrentVirtual()));
-    axisR.setHoldControllerInputAngle(DT::Angle::fromDegrees(twist.getCurrentVirtual()));
-    
     // Serial.println("RobotAngleA:" + String(axisA.getCurrentAngle().getInDegrees()));
     // Serial.println("RobotAngleB:" + String(axisB.getCurrentAngle().getInDegrees()));
     // Serial.println("RobotAngleC:" + String(axisC.getCurrentAngle().getInDegrees()));
     // Serial.println("RobotAngleR:" + String(axisR.getCurrentAngle().getInDegrees()));
-
-    // // parseCommandFromSerial();
 
     axisA.update();
     axisB.update();

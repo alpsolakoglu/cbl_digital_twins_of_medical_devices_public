@@ -8,18 +8,20 @@ namespace DT
                                                  bool motorPositiveClockwise,
                                                  bool rotaryEncoderPositiveClockwise,
                                                  Angle initialAngle,
+                                                 Potentiometer *potentiometer,
+                                                 double beta,
                                                  uint16_t minPulseWidth,
                                                  uint16_t maxPulseWidth,
                                                  uint16_t commandTimeoutMs,
                                                  uint16_t configureWaitTimeMs,
-                                                 uint16_t awaitingCommandDelayMs,
-                                                 Potentiometer *potentiometer)
+                                                 uint16_t awaitingCommandDelayMs)
         : IController(axisName,
                       initialAngle,
                       configureWaitTimeMs,
                       commandTimeoutMs,
                       awaitingCommandDelayMs,
-                      potentiometer),
+                      potentiometer,
+                      beta),
           m_motorRotary(pin,
                         channel,
                         axisName,
@@ -130,8 +132,10 @@ namespace DT
 
     void MotorRotaryController::onHoldControllerInput()
     {
-        // Keep the motor at the command angle
-        Serial.println("onHoldControllerInput: Keeping motor at command angle: " + String(m_controllerInputAngle.getInDegrees()) + " degrees");
+        Serial.println("RobotAngle" + String(m_axisName.c_str()) + ":" + m_motorRotary.getAngle().getInDegrees());
+
+        updateControllerInputAngle();
+
         setMotorToMoveTowardsAngle(m_controllerInputAngle);
         return;
     }

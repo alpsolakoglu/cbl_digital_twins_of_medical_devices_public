@@ -21,6 +21,7 @@ namespace DT
 
     public:
         Potentiometer *m_potentiometer; // Potentiometer for reading angles
+        double m_beta; // Beta value for EWMA
 
         // MotorRotary m_motorRotary;
         ControllerState m_state = ControllerState::START; // Reference to the current state of the axis controller
@@ -47,27 +48,18 @@ namespace DT
             uint16_t configureWaitTimeMs = 3000,
             uint16_t commandTimeoutMs = 5000,
             uint16_t awaitingCommandDelayMs = 750,
-            Potentiometer *potentiometer = nullptr) : m_configureWaitTimeMs(configureWaitTimeMs),
-                                                      m_commandTimeoutMs(commandTimeoutMs),
-                                                      m_awaitingCommandDelayMs(awaitingCommandDelayMs),
-                                                      m_commandAngle(Angle::fromDegrees(0.0)),
-                                                      m_axisName(axisName),
-                                                      m_initialAngle(initialAngle),
-                                                      m_controllerInputAngle(Angle::fromDegrees(0.0)),
-                                                      m_potentiometer(m_potentiometer) {};
+            Potentiometer *potentiometer = nullptr,
+            double beta = 0.9) : m_configureWaitTimeMs(configureWaitTimeMs),
+                                 m_commandTimeoutMs(commandTimeoutMs),
+                                 m_awaitingCommandDelayMs(awaitingCommandDelayMs),
+                                 m_commandAngle(Angle::fromDegrees(0.0)),
+                                 m_axisName(axisName),
+                                 m_initialAngle(initialAngle),
+                                 m_controllerInputAngle(Angle::fromDegrees(0.0)),
+                                 m_potentiometer(potentiometer),
+                                 m_beta(beta) {};
 
         virtual bool start() = 0;
-
-        void setHoldControllerInputAngle(Angle angle)
-        {
-            // if (Angle::isWithinDelta(angle, m_controllerInputAngle, Angle::fromDegrees(5.0)))
-            // {
-            //     // Serial.println("Controller input angle is within delta, no change needed.");
-            //     return; // No change needed if the angle is within a small delta
-            // }
-
-            m_controllerInputAngle = angle; // Set the angle for the controller input mode
-        }
 
         ControllerState getState() const
         {
@@ -78,6 +70,21 @@ namespace DT
         {
             m_angleQueue.push(angle); // Add the angle to the queue
             Serial.println("Angle added to queue: " + String(angle.getInDegrees()) + " degrees");
+        }
+
+        void updateControllerInputAngle()
+        {
+            double potentiometerAngleDegrees = m_potentiometer->getCurrentVirtual();
+
+            double controllerInputAngleDegrees = m_controllerInputAngle.getInDegrees();
+            double controllerInputAngleScaled = controllerInputAngleDegrees <= 180 ? controllerInputAngleDegrees : controllerInputAngleDegrees - 360;
+
+            Serial.println("potangledegrees");
+            Serial.println(potentiometerAngleDegrees);
+            Serial.println("contscaled");
+            Serial.println(controllerInputAngleScaled);
+            m_controllerInputAngle = Angle::fromDegrees(m_beta * controllerInputAngleScaled + (1 - m_beta) * potentiometerAngleDegrees);
+            // m_controllerInputAngle = Angle::fromDegrees(potentiometerAngleDegrees);
         }
 
         void update()

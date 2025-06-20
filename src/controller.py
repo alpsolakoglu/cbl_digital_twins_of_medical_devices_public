@@ -37,7 +37,11 @@ def start(controller_queue, simulation_queue, port, baudrate, timeout):
         # Read data from the serial port
         while True:
             if ser.in_waiting > 0:
-                data = ser.readline().decode('utf-8').strip()
+                try:
+                    data = ser.readline().decode('utf-8').strip()
+                except UnicodeDecodeError as e:
+                    print(f"Unicode decode error: {e}")
+                    continue
 
                 # Try to parse as individual robot angle
                 if data.startswith("RobotAngle"):
