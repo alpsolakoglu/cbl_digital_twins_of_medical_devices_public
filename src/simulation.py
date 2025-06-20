@@ -166,7 +166,7 @@ class ProximityWarningSystem:
                 bile_duct_pos_initial[1] + math.sin(i * 2 * math.pi / 8) * 0.05, 
                 bile_duct_pos_initial[2]
             )
-            draw_circle(bile_duct_pos, radius=0.1, color=[0, 1, 0])  # Draw gallbladder circle
+            # draw_circle(bile_duct_pos, radius=0.1, color=[0, 1, 0])  # Draw gallbladder circle
             distance = self.calculate_distance(pos1, bile_duct_pos)
             if distance < min_dist:
                 min_dist = distance
@@ -183,7 +183,7 @@ class ProximityWarningSystem:
         print("Joint Position:", joint_pos)
         distance_mm = distance * 1000  # Convert to millimeters
 
-        draw_circle(joint_pos)
+        # draw_circle(joint_pos)
 
         print("Distance_mm:", distance_mm)
         
